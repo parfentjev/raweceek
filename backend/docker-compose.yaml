@@ -2,5 +2,22 @@ services:
   api:
     image: rawe-ceek-backend
     restart: unless-stopped
+    env_file:
+      - .env
     ports:
       - "8090:8080"
+
+  mariadb:
+    image: mariadb:11.4.2
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - mariadb:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mariadb: { }

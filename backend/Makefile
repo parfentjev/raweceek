@@ -7,8 +7,7 @@ codegen_run:
             -i /workdir/spec/swagger.yaml \
             -g spring \
             -o /workdir/out
-    # there are no models yet, commenting out
-	#docker cp raweceek-backend-codegen:/workdir/out/src/main/java/eu/raweceek/codegen/models/ ./codegen/src/main/java/eu/raweceek/codegen/models/
+	docker cp raweceek-backend-codegen:/workdir/out/src/main/java/eu/raweceek/codegen/models/ ./codegen/src/main/java/eu/raweceek/codegen/models/
 	docker cp raweceek-backend-codegen:/workdir/out/src/main/java/eu/raweceek/codegen/api/ ./codegen/src/main/java/eu/raweceek/codegen/api/
 
 codegen_cleanup:

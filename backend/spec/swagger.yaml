@@ -4,11 +4,36 @@ info:
   version: 1.0.0
 servers:
   - url: https://raweceek.eu/api
-  - url: http://localhost:8080
 tags:
+  - name: Event
   - name: System
 paths:
-  /health:
+  /events:
+    get:
+      tags:
+        - Event
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventDto"
+  /events/next:
+    get:
+      tags:
+        - Event
+      responses:
+        '200':
+          description: Next event by startTime
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/EventDto"
+  /system/health:
     get:
       tags:
         - System
@@ -18,3 +43,20 @@ paths:
           description: Service is healthy
         default:
           description: Service is not healthy
+components:
+  schemas:
+    EventDto:
+      type: object
+      properties:
+        summary:
+          type: string
+          example: 🏁 FORMULA 1 ETIHAD AIRWAYS ABU DHABI GRAND PRIX 2024 - Race
+        location:
+          type: string
+          example: United Arab Emirates
+        startTime:
+          type: string
+          example: 2024-12-08T13:00Z
+      required:
+        - token
+        - expires

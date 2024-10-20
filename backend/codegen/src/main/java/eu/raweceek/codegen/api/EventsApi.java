@@ -5,6 +5,7 @@
  */
 package eu.raweceek.codegen.api;
 
+import eu.raweceek.codegen.models.EventDto;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,31 +34,55 @@ import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.10.0-SNAPSHOT")
 @Validated
-@Tag(name = "System", description = "the System API")
-public interface HealthApi {
+@Tag(name = "Event", description = "the Event API")
+public interface EventsApi {
 
     /**
-     * GET /health
-     * Returns the health status of the service
+     * GET /events
      *
-     * @return Service is healthy (status code 200)
-     *         or Service is not healthy (status code 200)
+     * @return List of events (status code 200)
      */
     @Operation(
-        operationId = "healthGet",
-        description = "Returns the health status of the service",
-        tags = { "System" },
+        operationId = "eventsGet",
+        tags = { "Event" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Service is healthy"),
-            @ApiResponse(responseCode = "default", description = "Service is not healthy")
+            @ApiResponse(responseCode = "200", description = "List of events", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventDto.class)))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/health"
+        value = "/events",
+        produces = { "application/json" }
     )
     
-    ResponseEntity<Void> healthGet(
+    ResponseEntity<List<EventDto>> eventsGet(
+        
+    );
+
+
+    /**
+     * GET /events/next
+     *
+     * @return Next event by startTime (status code 200)
+     */
+    @Operation(
+        operationId = "eventsNextGet",
+        tags = { "Event" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Next event by startTime", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = EventDto.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/events/next",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<EventDto> eventsNextGet(
         
     );
 
