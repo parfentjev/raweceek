@@ -1,4 +1,4 @@
-package eu.raweceek.service.event.model;
+package eu.raweceek.service.session.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Event {
+public class Session {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   @Column(unique = true)

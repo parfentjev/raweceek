@@ -5,34 +5,34 @@ info:
 servers:
   - url: https://raweceek.eu/api
 tags:
-  - name: Event
+  - name: Session
   - name: System
 paths:
-  /events:
+  /sessions:
     get:
       tags:
-        - Event
+        - Session
       responses:
         '200':
-          description: List of events
+          description: List of upcoming sessions
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/EventDto"
-  /events/next:
+                  $ref: "#/components/schemas/SessionDto"
+  /sessions/next:
     get:
       tags:
-        - Event
+        - Session
       responses:
         '200':
-          description: Next event by startTime
+          description: Next session by startTime
           content:
             application/json:
               schema:
                 type: object
-                $ref: "#/components/schemas/EventDto"
+                $ref: "#/components/schemas/SessionDto"
   /system/health:
     get:
       tags:
@@ -45,7 +45,7 @@ paths:
           description: Service is not healthy
 components:
   schemas:
-    EventDto:
+    SessionDto:
       type: object
       properties:
         summary:

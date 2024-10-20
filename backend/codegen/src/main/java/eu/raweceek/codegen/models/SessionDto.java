@@ -14,11 +14,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * EventDto
+ * SessionDto
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.10.0-SNAPSHOT")
-public class EventDto {
+public class SessionDto {
 
   private String summary;
 
@@ -26,7 +26,7 @@ public class EventDto {
 
   private String startTime;
 
-  public EventDto summary(String summary) {
+  public SessionDto summary(String summary) {
     this.summary = summary;
     return this;
   }
@@ -46,7 +46,7 @@ public class EventDto {
     this.summary = summary;
   }
 
-  public EventDto location(String location) {
+  public SessionDto location(String location) {
     this.location = location;
     return this;
   }
@@ -66,7 +66,7 @@ public class EventDto {
     this.location = location;
   }
 
-  public EventDto startTime(String startTime) {
+  public SessionDto startTime(String startTime) {
     this.startTime = startTime;
     return this;
   }
@@ -94,10 +94,10 @@ public class EventDto {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EventDto eventDto = (EventDto) o;
-    return Objects.equals(this.summary, eventDto.summary) &&
-        Objects.equals(this.location, eventDto.location) &&
-        Objects.equals(this.startTime, eventDto.startTime);
+    SessionDto sessionDto = (SessionDto) o;
+    return Objects.equals(this.summary, sessionDto.summary) &&
+        Objects.equals(this.location, sessionDto.location) &&
+        Objects.equals(this.startTime, sessionDto.startTime);
   }
 
   @Override
@@ -108,7 +108,7 @@ public class EventDto {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EventDto {\n");
+    sb.append("class SessionDto {\n");
     sb.append("    summary: ").append(toIndentedString(summary)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    startTime: ").append(toIndentedString(startTime)).append("\n");

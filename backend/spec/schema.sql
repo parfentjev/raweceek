@@ -1,4 +1,4 @@
-CREATE TABLE `event` (
+CREATE TABLE `session` (
   `id` uuid NOT NULL DEFAULT uuid(),
   `summary` varchar(256) NOT NULL,
   `location` varchar(64) NOT NULL,
