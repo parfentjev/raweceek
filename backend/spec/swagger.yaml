@@ -18,20 +18,3 @@ paths:
           description: Service is healthy
         default:
           description: Service is not healthy
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-  schemas:
-    UserTokenDto:
-      type: object
-      properties:
-        token:
-          type: string
-        expires:
-          type: integer
-      required:
-        - token
-        - expires

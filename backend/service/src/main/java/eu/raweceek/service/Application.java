@@ -1,4 +1,4 @@
-package eu.raweceek;
+package eu.raweceek.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

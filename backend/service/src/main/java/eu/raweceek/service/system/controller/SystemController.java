@@ -1,4 +1,4 @@
-package eu.raweceek.system.controller;
+package eu.raweceek.service.system.controller;
 
 import eu.raweceek.codegen.api.HealthApi;
 import org.springframework.http.ResponseEntity;

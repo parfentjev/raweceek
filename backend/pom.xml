@@ -17,8 +17,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>service</module>
         <module>codegen</module>
+        <module>service</module>
     </modules>
 
     <properties>

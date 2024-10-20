@@ -8,3 +8,4 @@ additionalProperties:
   artifactVersion: 1.0.0
   openApiNullable: false
   useSpringBoot3: true
+  hideGenerationTimestamp: true
