@@ -4,7 +4,7 @@ This is a REST API service that provides information about upcoming sessions and
 
 ## Documentation
 
-You can find detailed documentation of the API at: [https://raweceek.eu/api/swagger-ui/index.html#/](https://raweceek.eu/api/swagger-ui/index.html#/)
+You can find detailed documentation of the API at in the specification file: `spec/swagger.yaml`
 
 ## Getting Started
 
