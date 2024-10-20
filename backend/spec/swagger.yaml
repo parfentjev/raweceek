@@ -50,7 +50,7 @@ components:
       properties:
         summary:
           type: string
-          example: 🏁 FORMULA 1 ETIHAD AIRWAYS ABU DHABI GRAND PRIX 2024 - Race
+          example: 🏁 GRAND PRIX NAME 2024 - Race
         location:
           type: string
           example: United Arab Emirates
