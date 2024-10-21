@@ -1,0 +1,13 @@
+package eu.raweceek.service.system.configuration;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+  @ExceptionHandler
+  public ResponseEntity<Void> exception(Throwable e) {
+    return ResponseEntity.internalServerError().build();
+  }
+}

@@ -47,6 +47,10 @@ components:
   schemas:
     SessionDto:
       type: object
+      required:
+        - summary
+        - location
+        - startTime
       properties:
         summary:
           type: string
@@ -57,6 +61,3 @@ components:
         startTime:
           type: string
           example: 2024-12-08T13:00Z
-      required:
-        - token
-        - expires

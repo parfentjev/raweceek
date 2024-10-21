@@ -1,4 +1,14 @@
+# configuration
 .idea/
+.vscode
 .env
-target/
+
+# misc
 *.tar
+
+# backend
+target/
+
+# frontend
+node_modules/
+build/

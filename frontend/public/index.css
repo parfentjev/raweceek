@@ -1,0 +1,94 @@
+@font-face {
+    font-family: 'Comic Neue';
+    src:
+        url('media/ComicNeue-Regular.ttf') format('truetype'),
+        url('media/ComicNeue-Bold.ttf') format('truetype');
+}
+
+body {
+    font-family: 'Comic Neue';
+    font-weight: bold;
+    font-size: 3rem;
+    background-image: url('media/background.jpg');
+    background-size: 500px 500px;
+    margin: 0;
+}
+
+#christmas-garland {
+    background-image: url('media/christmas-garland.gif');
+    background-size: 266px 100px;
+    height: 100px;
+}
+
+#welcome-box {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 1rem;
+    width: 75%;
+    max-width: 1000px;
+    margin: 5rem auto;
+    border: 5px dashed red;
+}
+
+img {
+    max-width: 90%;
+}
+
+img:hover {
+    filter: saturate(10);
+}
+
+.dancing-image {
+    animation: dance 1s infinite;
+    transform-origin: center;
+}
+
+@keyframes dance {
+    0% {
+        transform: rotate(-10deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+    100% {
+        transform: rotate(-10deg);
+    }
+}
+
+code {
+    display: block;
+    word-wrap: break-word;
+}
+
+nav {
+    text-align: center;
+    font-size: 2rem;
+    margin: 5rem;
+}
+
+nav ul {
+    padding: 0;
+    margin: 0;
+}
+
+nav li {
+    display: inline;
+    margin: 0 1rem;
+    border: 5px solid blueviolet;
+    background-color: skyblue;
+    padding: 1rem;
+}
+
+nav li:hover {
+    border: 5px solid darkorange;
+    background-color: palevioletred;
+}
+
+nav a {
+    color: white;
+    text-transform: uppercase;
+}
+
+nav a:hover {
+    color: mediumspringgreen;
+}

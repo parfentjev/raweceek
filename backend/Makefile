@@ -25,4 +25,4 @@ build:
 
 .PHONY: push
 push:
-	scp rawe-ceek-backend.tar $(RAW_CEEK_BACKEND_PWD)
+	rsync rawe-ceek-backend.tar $(RAWE_CEEK_BACKEND_PWD)

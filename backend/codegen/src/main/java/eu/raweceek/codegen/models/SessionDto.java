@@ -26,6 +26,19 @@ public class SessionDto {
 
   private String startTime;
 
+  public SessionDto() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public SessionDto(String summary, String location, String startTime) {
+    this.summary = summary;
+    this.location = location;
+    this.startTime = startTime;
+  }
+
   public SessionDto summary(String summary) {
     this.summary = summary;
     return this;
@@ -35,8 +48,8 @@ public class SessionDto {
    * Get summary
    * @return summary
    */
-  
-  @Schema(name = "summary", example = "🏁 FORMULA 1 ETIHAD AIRWAYS ABU DHABI GRAND PRIX 2024 - Race", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "summary", example = "🏁 GRAND PRIX NAME 2024 - Race", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("summary")
   public String getSummary() {
     return summary;
@@ -55,8 +68,8 @@ public class SessionDto {
    * Get location
    * @return location
    */
-  
-  @Schema(name = "location", example = "United Arab Emirates", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "location", example = "United Arab Emirates", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("location")
   public String getLocation() {
     return location;
@@ -75,8 +88,8 @@ public class SessionDto {
    * Get startTime
    * @return startTime
    */
-  
-  @Schema(name = "startTime", example = "2024-12-08T13:00Z", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "startTime", example = "2024-12-08T13:00Z", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("startTime")
   public String getStartTime() {
     return startTime;
