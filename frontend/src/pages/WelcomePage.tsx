@@ -6,6 +6,7 @@ import Notifications from '../components/Notifications'
 import ChristmasGarland from '../components/ChristmasGarland'
 import WelcomeBox from '../components/WelcomeBox'
 import Navigation from '../components/Navigation'
+import Counter from '../components/Counter'
 
 const WelcomePage: FC = () => {
     const [raceWeek, setRaceWeek] = useState<boolean>()
@@ -37,6 +38,7 @@ const WelcomePage: FC = () => {
             <Navigation />
             <WelcomeBox raceWeek={raceWeek} />
             <Navigation />
+            <Counter />
         </>
     )
 }

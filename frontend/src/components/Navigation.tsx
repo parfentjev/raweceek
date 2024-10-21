@@ -15,7 +15,7 @@ const Navigation: FC = () => {
                 </li>
                 <li>
                     <a
-                        href="https://codeberg.org/parfentjev/raweceek"
+                        href="https://codeberg.org/parfentjev/raweceek/src/branch/master/backend/spec/swagger.yaml"
                         target="_blank"
                         rel="noreferrer"
                     >
@@ -32,16 +32,6 @@ const Navigation: FC = () => {
                     </a>
                 </li>
             </ul>
-            {process.env.NODE_ENV === 'production' && (
-                <div>
-                    <a href="https://www.free-website-hit-counter.com">
-                        <img
-                            src="https://www.free-website-hit-counter.com/zc.php?d=9&id=532&s=1"
-                            alt="Free Website Hit Counter"
-                        />
-                    </a>
-                </div>
-            )}
         </nav>
     )
 }

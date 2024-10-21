@@ -27,5 +27,5 @@ build:
 	NODE_ENV="production" REACT_APP_SERVICE_URL="https://raweceek.eu/api" npm run build
 
 .PHONY: push
-deploy:
+push:
 	rsync -r build/* $(RAWE_CEEK_FRONTEND_PWD)
