@@ -15,20 +15,20 @@ const Navigation: FC = () => {
                 </li>
                 <li>
                     <a
+                        href="https://www.formula1.com/en/racing/2024"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        📅calendar
+                    </a>
+                </li>
+                <li>
+                    <a
                         href="https://codeberg.org/parfentjev/raweceek/src/branch/master/backend/spec/swagger.yaml"
                         target="_blank"
                         rel="noreferrer"
                     >
                         📜api
-                    </a>
-                </li>
-                <li>
-                    <a
-                        href="https://codeberg.org/parfentjev/raweceek"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        👩‍💻source
                     </a>
                 </li>
             </ul>

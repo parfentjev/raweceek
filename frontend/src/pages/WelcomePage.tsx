@@ -1,33 +1,20 @@
 import { FC, useEffect, useState } from 'react'
 import { sessionApi } from '../api/api'
 import { toast } from 'react-toastify'
-import { getWeek } from 'date-fns'
 import Notifications from '../components/Notifications'
 import ChristmasGarland from '../components/ChristmasGarland'
 import WelcomeBox from '../components/WelcomeBox'
 import Navigation from '../components/Navigation'
 import Counter from '../components/Counter'
+import { SessionDto } from '../api/codegen'
 
 const WelcomePage: FC = () => {
-    const [raceWeek, setRaceWeek] = useState<boolean>()
+    const [session, setSession] = useState<SessionDto>()
 
     useEffect(() => {
         sessionApi()
             .sessionsNextGet()
-            .then((session) => {
-                const sessionTime = new Date(session.startTime)
-                const currentTime = new Date()
-
-                const sameWeek =
-                    getWeek(sessionTime, { weekStartsOn: 1 }) ===
-                    getWeek(currentTime, { weekStartsOn: 1 })
-
-                if (sameWeek) {
-                    setRaceWeek(true)
-                } else {
-                    setRaceWeek(false)
-                }
-            })
+            .then((session) => setSession(session))
             .catch(() => toast.error('Something went wrong!!'))
     }, [])
 
@@ -36,7 +23,7 @@ const WelcomePage: FC = () => {
             <Notifications />
             <ChristmasGarland />
             <Navigation />
-            <WelcomeBox raceWeek={raceWeek} />
+            <WelcomeBox session={session} />
             <Navigation />
             <Counter />
         </>
