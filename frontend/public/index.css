@@ -96,3 +96,11 @@ nav a:hover {
 #counter {
     text-align: center;
 }
+
+@media screen and (max-width: 1000px) {
+    nav li {
+        display: block;
+        word-wrap: break-word;
+        margin: 1rem auto;
+    }
+}
