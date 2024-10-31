@@ -66,6 +66,7 @@ public interface SessionsApi {
      * GET /sessions/next
      *
      * @return Next session by startTime (status code 200)
+     *         or Not found (status code 404)
      */
     @Operation(
         operationId = "sessionsNextGet",
@@ -73,7 +74,8 @@ public interface SessionsApi {
         responses = {
             @ApiResponse(responseCode = "200", description = "Next session by startTime", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = SessionDto.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not found")
         }
     )
     @RequestMapping(

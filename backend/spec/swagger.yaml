@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Rawe Ceek API
-  version: 1.0.0
+  version: 1.1.0
 servers:
   - url: https://raweceek.eu/api
 tags:
@@ -33,6 +33,8 @@ paths:
               schema:
                 type: object
                 $ref: "#/components/schemas/SessionDto"
+        '404':
+          description: Not found
   /system/health:
     get:
       tags:
