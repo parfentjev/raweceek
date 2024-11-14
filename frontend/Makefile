@@ -14,6 +14,10 @@ codegen:
 		-o /workdir/out \
 		--additional-properties hooks=true
 
+.PHONY: banners
+banners:
+	ls -l ./public/banners/ | tail -n +2 | grep -v 'README.md' | awk '{print $$NF}' > ./public/banners.txt
+
 .PHONY: build
 build:
 	NODE_ENV="production" REACT_APP_SERVICE_URL="https://raweceek.eu/api" npm run build

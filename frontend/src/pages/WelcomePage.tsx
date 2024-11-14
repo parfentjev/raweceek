@@ -7,6 +7,7 @@ import WelcomeBox from '../components/WelcomeBox'
 import Navigation from '../components/Navigation'
 import Counter from '../components/Counter'
 import { SessionDto } from '../api/codegen'
+import Banners from '../components/Banners'
 
 const WelcomePage: FC = () => {
     const [session, setSession] = useState<SessionDto>()
@@ -22,6 +23,7 @@ const WelcomePage: FC = () => {
         <>
             <Notifications />
             <ChristmasGarland />
+            <Banners />
             <Navigation />
             <WelcomeBox session={session} />
             <Navigation />

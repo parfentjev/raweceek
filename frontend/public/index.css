@@ -63,7 +63,7 @@ code {
 nav {
     text-align: center;
     font-size: 2rem;
-    margin: 5rem;
+    margin: 2rem;
 }
 
 nav ul {
@@ -94,6 +94,10 @@ nav a:hover {
 }
 
 #counter {
+    text-align: center;
+}
+
+#banner {
     text-align: center;
 }
 
