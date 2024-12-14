@@ -47,7 +47,7 @@ const WelcomeBox: FC<Props> = ({ session }) => {
                 <img src="media/super-easy.png" alt="Super easy" />
             </p>
             <p>
-                I say. Thanks to this <RainbowText>fantastic</RainbowText>...
+                I say. Thanks to this <RainbowText>majestic</RainbowText>...
             </p>
             <p>
                 <img src="media/rest-api-service.png" alt="REST API Service" />

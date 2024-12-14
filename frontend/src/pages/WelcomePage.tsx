@@ -1,7 +1,5 @@
 import { FC, useEffect, useState } from 'react'
 import { sessionApi } from '../api/api'
-import { toast } from 'react-toastify'
-import Notifications from '../components/Notifications'
 import ChristmasGarland from '../components/ChristmasGarland'
 import WelcomeBox from '../components/WelcomeBox'
 import Navigation from '../components/Navigation'
@@ -16,12 +14,11 @@ const WelcomePage: FC = () => {
         sessionApi()
             .sessionsNextGet()
             .then((session) => setSession(session))
-            .catch(() => toast.error('Something went wrong!!'))
+            .catch((e) => console.log('err response', e))
     }, [])
 
     return (
         <>
-            <Notifications />
             <ChristmasGarland />
             <Banners />
             <Navigation />
