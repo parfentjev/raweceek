@@ -33,6 +33,8 @@ public class SessionsCountdownGet200Response {
   @Valid
   private List<@Valid CountdownDto> countdowns = new ArrayList<>();
 
+  private @Nullable Boolean isRaceWeek;
+
   public SessionsCountdownGet200Response session(SessionDto session) {
     this.session = session;
     return this;
@@ -81,6 +83,26 @@ public class SessionsCountdownGet200Response {
     this.countdowns = countdowns;
   }
 
+  public SessionsCountdownGet200Response isRaceWeek(Boolean isRaceWeek) {
+    this.isRaceWeek = isRaceWeek;
+    return this;
+  }
+
+  /**
+   * Get isRaceWeek
+   * @return isRaceWeek
+   */
+  
+  @Schema(name = "isRaceWeek", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("isRaceWeek")
+  public Boolean getIsRaceWeek() {
+    return isRaceWeek;
+  }
+
+  public void setIsRaceWeek(Boolean isRaceWeek) {
+    this.isRaceWeek = isRaceWeek;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -91,12 +113,13 @@ public class SessionsCountdownGet200Response {
     }
     SessionsCountdownGet200Response sessionsCountdownGet200Response = (SessionsCountdownGet200Response) o;
     return Objects.equals(this.session, sessionsCountdownGet200Response.session) &&
-        Objects.equals(this.countdowns, sessionsCountdownGet200Response.countdowns);
+        Objects.equals(this.countdowns, sessionsCountdownGet200Response.countdowns) &&
+        Objects.equals(this.isRaceWeek, sessionsCountdownGet200Response.isRaceWeek);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(session, countdowns);
+    return Objects.hash(session, countdowns, isRaceWeek);
   }
 
   @Override
@@ -105,6 +128,7 @@ public class SessionsCountdownGet200Response {
     sb.append("class SessionsCountdownGet200Response {\n");
     sb.append("    session: ").append(toIndentedString(session)).append("\n");
     sb.append("    countdowns: ").append(toIndentedString(countdowns)).append("\n");
+    sb.append("    isRaceWeek: ").append(toIndentedString(isRaceWeek)).append("\n");
     sb.append("}");
     return sb.toString();
   }

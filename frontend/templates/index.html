@@ -18,6 +18,10 @@
             font-size: 4rem;
         }
 
+        li {
+            list-style: none;
+        }
+
         .menu a {
             margin-left: 25px;
             margin-right: 25px;
@@ -40,6 +44,34 @@
         .buttons p {
             padding: 0;
             margin: 0;
+        }
+
+        .color-0 {
+            color: red;
+        }
+
+        .color-1 {
+            color: orange;
+        }
+
+        .color-2 {
+            color: yellow;
+        }
+
+        .color-3 {
+            color: green;
+        }
+
+        .color-4 {
+            color: blue;
+        }
+
+        .color-5 {
+            color: indigo;
+        }
+
+        .color-6 {
+            color: violet;
         }
 
         @media screen and (max-width: 1280px) {
@@ -70,37 +102,47 @@
         </div>
         <p><img src={{ url_for('static', filename='img/under-construction.gif') }}></p>
         <p>
-            {% if data and data.race_week %}
-                <marquee direction="right" behavior="alternate" scrollamount="25">
-                    <h1>
-                        <span style="color: red">T</span>
-                        <span style="color: orange">H</span>
-                        <span style="color: yellow">I</span>
-                        <span style="color: green">S</span>
-                        <span> </span>
-                        <span style="color: blue">W</span>
-                        <span style="color: indigo">E</span>
-                        <span style="color: violet">E</span>
-                        <span style="color: red">K</span>
-                        <span> </span>
-                        <span style="color: orange">I</span>
-                        <span style="color: yellow">S</span>
-                        <span> </span>
-                        <span style="color: green">A</span>
-                        <span> </span>
-                        <span style="color: blue">R</span>
-                        <span style="color: indigo">A</span>
-                        <span style="color: violet">C</span>
-                        <span style="color: red">E</span>
-                        <span> </span>
-                        <span style="color: orange">W</span>
-                        <span style="color: yellow">E</span>
-                        <span style="color: green">E</span>
-                        <span style="color: blue">K</span>
-                    </h1>
-                </marquee>
+            {% if data %}
+                {% if data.isRaceWeek %}
+                    <marquee direction="right" behavior="alternate" scrollamount="25">
+                        <h1>
+                            <span style="color: red">T</span>
+                            <span style="color: orange">H</span>
+                            <span style="color: yellow">I</span>
+                            <span style="color: green">S</span>
+                            <span> </span>
+                            <span style="color: blue">W</span>
+                            <span style="color: indigo">E</span>
+                            <span style="color: violet">E</span>
+                            <span style="color: red">K</span>
+                            <span> </span>
+                            <span style="color: orange">I</span>
+                            <span style="color: yellow">S</span>
+                            <span> </span>
+                            <span style="color: green">A</span>
+                            <span> </span>
+                            <span style="color: blue">R</span>
+                            <span style="color: indigo">A</span>
+                            <span style="color: violet">C</span>
+                            <span style="color: red">E</span>
+                            <span> </span>
+                            <span style="color: orange">W</span>
+                            <span style="color: yellow">E</span>
+                            <span style="color: green">E</span>
+                            <span style="color: blue">K</span>
+                        </h1>
+                    </marquee>
+                {% else %}
+                    This week is not a race week =(
+                {% endif %}
+                <p>"How long should <i>I</i> wait until the next session???" Only...</p>
+                <ul>
+                {% for countdown in data.countdowns %}
+                    <li class="color-{{ loop.index % 7 }}">{{ countdown.value | round(2) }} {{ countdown.unit }}</li>
+                {% endfor %}
+                </ul>
             {% else %}
-                This week is not a race week =(
+                Something went wrong! I don't know if this week is a race week =(
             {% endif %}
         </p>
         <p class="extra-margin"><img src={{ url_for('static', filename='img/checkered-flag.gif') }}><img src={{ url_for('static', filename='img/racecar.gif') }}><img src={{ url_for('static', filename='img/checkered-flag.gif') }}></p>
@@ -111,8 +153,8 @@
         <p>I only need to make one request to know when is the next racing session!</p>
         <p class="extra-margin"><img src={{ url_for('static', filename='img/is-that-curl.gif') }}></p>
         <p>YES, <span style="font-style: italic; text-decoration: underline; font-weight: bold;">IT IS!!!</span></p>
-        <p>$ curl https://raweceek.eu/api/sessions/next</p>
-        {% if data %}<p>{{ data.json }}</p>{% endif %}
+        <p>$ curl https://raweceek.eu/api/sessions/countdown</p>
+        {% if data %}<p>{{ data }}</p>{% endif %}
         <p><img src={{ url_for('static', filename='img/under-construction.gif') }}></p>
         <div class="buttons">
             <p><img src={{ url_for('static', filename='img/buttons/100hot.gif') }}><img src={{ url_for('static', filename='img/buttons/abinow.gif') }}><img src={{ url_for('static', filename='img/buttons/acrobat.gif') }}><img src={{ url_for('static', filename='img/buttons/aimlink.gif') }}><img src={{ url_for('static', filename='img/buttons/amazing_free_stuff.gif') }}></p>
@@ -121,7 +163,7 @@
             <p><img src={{ url_for('static', filename='img/buttons/linux_powered.gif') }}><img src={{ url_for('static', filename='img/buttons/microsoft_frontpage.gif') }}><img src={{ url_for('static', filename='img/buttons/mircnow.gif') }}><img src={{ url_for('static', filename='img/buttons/mp3button.gif') }}><img src={{ url_for('static', filename='img/buttons/mysql5.gif') }}></p>
             <p><img src={{ url_for('static', filename='img/buttons/shbutton.gif') }}><img src={{ url_for('static', filename='img/buttons/stockobjects.gif') }}><img src={{ url_for('static', filename='img/buttons/top50w.gif') }}><img src={{ url_for('static', filename='img/buttons/winfiles.gif') }}><img src={{ url_for('static', filename='img/buttons/winzip.gif') }}></p>
         </div>
-        <p><a href="https://www.free-website-hit-counter.com"><img src="https://www.free-website-hit-counter.com/zc.php?d=9&id=532&s=1" alt="Free Website Hit Counter" /></a></p>
+        <p><a href="https://www.free-website-hit-counter.com"><img src="http://www.free-website-hit-counter.com/zc.php?d=9&id=532&s=1" alt="Free Website Hit Counter" /></a></p>
     </div>
 </body>
 </html>

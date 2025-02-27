@@ -53,6 +53,8 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/CountdownDto"
+                  isRaceWeek:
+                    type: boolean
         '404':
           description: Next session not found
   /system/health:
@@ -94,4 +96,8 @@ components:
           example: 3.95
         unit:
           type: string
-          example: ceeks
+          enum:
+            - "ceeks"
+            - "super maxes"
+            - "dog years"
+            - "eye blinks"

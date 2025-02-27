@@ -1,6 +1,7 @@
 package eu.raweceek.service.session.controller;
 
 import eu.raweceek.codegen.api.SessionsApi;
+import eu.raweceek.codegen.models.CountdownDto;
 import eu.raweceek.codegen.models.SessionDto;
 import eu.raweceek.codegen.models.SessionsCountdownGet200Response;
 import eu.raweceek.service.session.service.CountdownService;
@@ -34,6 +35,14 @@ public class SessionController implements SessionsApi {
     var sessionDto = sessionService.nextSession();
     var countdowns = countdownService.calculateRemainingTime(sessionDto);
 
-    return ResponseEntity.ok(new SessionsCountdownGet200Response().session(sessionDto).countdowns(countdowns));
+    return ResponseEntity.ok(new SessionsCountdownGet200Response()
+      .session(sessionDto)
+      .countdowns(countdowns)
+      .isRaceWeek(countdowns.stream()
+        .filter(c -> c.getUnit() == CountdownDto.UnitEnum.CEEKS)
+        .findFirst()
+        .orElse(new CountdownDto().value(1.0))
+        .getValue() < 1)
+    );
   }
 }

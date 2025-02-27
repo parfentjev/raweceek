@@ -11,11 +11,11 @@ import java.util.Map;
 
 @Service
 public class CountdownService {
-  private static final Map<String, Double> UNIT_SECONDS_MAP = Map.of(
-    "ceeks", 604_800.0,
-    "supermaxes", 225.0,
-    "dog years", 4_505_142.0,
-    "eye blinks", 0.3
+  private static final Map<CountdownDto.UnitEnum, Double> UNIT_SECONDS_MAP = Map.of(
+    CountdownDto.UnitEnum.CEEKS, 604_800.0,
+    CountdownDto.UnitEnum.SUPER_MAXES, 225.0,
+    CountdownDto.UnitEnum.DOG_YEARS, 4_505_142.0,
+    CountdownDto.UnitEnum.EYE_BLINKS, 0.3
   );
 
   public List<CountdownDto> calculateRemainingTime(SessionDto sessionDto) {

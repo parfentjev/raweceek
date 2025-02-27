@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.lang.Nullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -23,7 +24,46 @@ public class CountdownDto {
 
   private Double value = null;
 
-  private String unit;
+  /**
+   * Gets or Sets unit
+   */
+  public enum UnitEnum {
+    CEEKS("ceeks"),
+    
+    SUPER_MAXES("super maxes"),
+    
+    DOG_YEARS("dog years"),
+    
+    EYE_BLINKS("eye blinks");
+
+    private String value;
+
+    UnitEnum(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static UnitEnum fromValue(String value) {
+      for (UnitEnum b : UnitEnum.values()) {
+        if (b.value.equals(value)) {
+          return b;
+        }
+      }
+      throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+  }
+
+  private UnitEnum unit;
 
   public CountdownDto() {
     super();
@@ -32,7 +72,7 @@ public class CountdownDto {
   /**
    * Constructor with only required parameters
    */
-  public CountdownDto(Double value, String unit) {
+  public CountdownDto(Double value, UnitEnum unit) {
     this.value = value;
     this.unit = unit;
   }
@@ -57,7 +97,7 @@ public class CountdownDto {
     this.value = value;
   }
 
-  public CountdownDto unit(String unit) {
+  public CountdownDto unit(UnitEnum unit) {
     this.unit = unit;
     return this;
   }
@@ -67,13 +107,13 @@ public class CountdownDto {
    * @return unit
    */
   @NotNull 
-  @Schema(name = "unit", example = "ceeks", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "unit", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("unit")
-  public String getUnit() {
+  public UnitEnum getUnit() {
     return unit;
   }
 
-  public void setUnit(String unit) {
+  public void setUnit(UnitEnum unit) {
     this.unit = unit;
   }
 

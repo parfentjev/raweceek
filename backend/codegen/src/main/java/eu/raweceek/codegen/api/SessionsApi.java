@@ -35,7 +35,7 @@ import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0-SNAPSHOT")
 @Validated
-@Tag(name = "sessions", description = "the sessions API")
+@Tag(name = "Session", description = "the Session API")
 public interface SessionsApi {
 
     /**
@@ -46,6 +46,7 @@ public interface SessionsApi {
      */
     @Operation(
         operationId = "sessionsCountdownGet",
+        tags = { "Session" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Countdown until the next session by startTime", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = SessionsCountdownGet200Response.class))
@@ -71,6 +72,7 @@ public interface SessionsApi {
      */
     @Operation(
         operationId = "sessionsGet",
+        tags = { "Session" },
         responses = {
             @ApiResponse(responseCode = "200", description = "List of upcoming sessions", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SessionDto.class)))
@@ -96,6 +98,7 @@ public interface SessionsApi {
      */
     @Operation(
         operationId = "sessionsNextGet",
+        tags = { "Session" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Next session by startTime", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = SessionDto.class))

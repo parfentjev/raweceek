@@ -9,16 +9,12 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    session = get_next_session()
+    countdown = get_countdown()
 
-    if not session:
+    if not countdown:
         return render_template('index.html')
 
-    target_date = datetime.strptime(session['startTime'], '%Y-%m-%dT%H:%MZ')
-    current_date = datetime.now(timezone.utc)
-    race_week = target_date.isocalendar()[1] == current_date.isocalendar()[1]
-
-    return render_template('index.html', data={'race_week': race_week, 'json': session})
+    return render_template('index.html', data=countdown)
 
 
 @app.route('/favicon.ico')
@@ -27,9 +23,9 @@ def favicon():
                                'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
-def get_next_session():
+def get_countdown():
     try:
-        response = get('https://raweceek.eu/api/sessions/next')
+        response = get('https://raweceek.eu/api/sessions/countdown')
         if response.status_code == 200:
             return response.json()
         else:
