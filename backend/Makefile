@@ -1,6 +1,6 @@
 .PHONY: codegen
 codegen:
-	rm -rf ./codegen/src/main/java/ee/fakeplastictrees/blog/codegen/*
+	find ./codegen/ -name "*.java" -delete
 	docker run --rm \
 			-v ./spec:/workdir/spec:ro \
 			-v ./codegen/src/main/java/eu/raweceek/codegen/models:/workdir/out/src/main/java/eu/raweceek/codegen/models \

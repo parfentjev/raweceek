@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Rawe Ceek API
-  version: 1.1.0
+  version: 1.2.0
 servers:
   - url: https://raweceek.eu/api
 tags:
@@ -35,6 +35,26 @@ paths:
                 $ref: "#/components/schemas/SessionDto"
         '404':
           description: Not found
+  /sessions/countdown:
+    get:
+      tags:
+        - Session
+      responses:
+        '200':
+          description: Countdown until the next session by startTime
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session:
+                    $ref: "#/components/schemas/SessionDto"
+                  countdowns:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CountdownDto"
+        '404':
+          description: Next session not found
   /system/health:
     get:
       tags:
@@ -63,3 +83,15 @@ components:
         startTime:
           type: string
           example: 2024-12-08T13:00Z
+    CountdownDto:
+      type: object
+      required:
+        - value
+        - unit
+      properties:
+        value:
+          type: double
+          example: 3.95
+        unit:
+          type: string
+          example: ceeks

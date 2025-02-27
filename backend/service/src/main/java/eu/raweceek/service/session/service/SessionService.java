@@ -14,14 +14,14 @@ public class SessionService {
   @Autowired
   private SessionRepository sessionRepository;
 
-  public List<SessionDto> getEvents() {
+  public List<SessionDto> getSessions() {
     return sessionRepository.findUpcoming()
       .stream()
       .map(SessionMapper::mapToDto)
       .toList();
   }
 
-  public SessionDto nextEvent() {
+  public SessionDto nextSession() {
     return SessionMapper.mapToDto(sessionRepository.findNext().orElseThrow(NoSuchElementException::new));
   }
 }
