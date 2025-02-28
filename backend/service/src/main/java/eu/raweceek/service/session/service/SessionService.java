@@ -1,7 +1,7 @@
 package eu.raweceek.service.session.service;
 
 import eu.raweceek.codegen.models.SessionDto;
-import eu.raweceek.service.session.model.SessionMapper;
+import eu.raweceek.service.session.model.util.SessionFactory;
 import eu.raweceek.service.session.model.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +17,11 @@ public class SessionService {
   public List<SessionDto> getSessions() {
     return sessionRepository.findUpcoming()
       .stream()
-      .map(SessionMapper::mapToDto)
+      .map(SessionFactory::mapToDto)
       .toList();
   }
 
   public SessionDto nextSession() {
-    return SessionMapper.mapToDto(sessionRepository.findNext().orElseThrow(NoSuchElementException::new));
+    return SessionFactory.mapToDto(sessionRepository.findNext().orElseThrow(NoSuchElementException::new));
   }
 }
