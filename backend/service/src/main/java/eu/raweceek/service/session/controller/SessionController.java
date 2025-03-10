@@ -10,11 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.Locale;
 
 import static java.time.OffsetDateTime.now;
 import static java.time.OffsetDateTime.parse;
-import static java.time.temporal.ChronoField.ALIGNED_WEEK_OF_YEAR;
 
 @RestController
 public class SessionController implements SessionsApi {
@@ -38,8 +39,11 @@ public class SessionController implements SessionsApi {
   public ResponseEntity<SessionsCountdownGet200Response> sessionsCountdownGet() {
     var sessionDto = sessionService.nextSession();
     var countdowns = countdownService.calculateRemainingTime(sessionDto);
-    var isRaceWeek = parse(sessionDto.getStartTime()).get(ALIGNED_WEEK_OF_YEAR) == now().get(ALIGNED_WEEK_OF_YEAR);
 
-    return ResponseEntity.ok(SessionsCountdownGet200ResponseFactory.withMandatoryData(sessionDto, countdowns, isRaceWeek));
+    var weekFields = WeekFields.of(Locale.getDefault());
+    var targetWeek = parse(sessionDto.getStartTime()).get(weekFields.weekOfYear());
+    var currentWeek = now().get(weekFields.weekOfYear());
+
+    return ResponseEntity.ok(SessionsCountdownGet200ResponseFactory.withMandatoryData(sessionDto, countdowns, targetWeek == currentWeek));
   }
 }
