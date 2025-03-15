@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.temporal.WeekFields;
 import java.util.List;
-import java.util.Locale;
 
 import static java.time.OffsetDateTime.now;
 import static java.time.OffsetDateTime.parse;
@@ -40,9 +39,8 @@ public class SessionController implements SessionsApi {
     var sessionDto = sessionService.nextSession();
     var countdowns = countdownService.calculateRemainingTime(sessionDto);
 
-    var weekFields = WeekFields.of(Locale.getDefault());
-    var targetWeek = parse(sessionDto.getStartTime()).get(weekFields.weekOfYear());
-    var currentWeek = now().get(weekFields.weekOfYear());
+    var targetWeek = parse(sessionDto.getStartTime()).get(WeekFields.ISO.weekOfYear());
+    var currentWeek = now().get(WeekFields.ISO.weekOfYear());
 
     return ResponseEntity.ok(SessionsCountdownGet200ResponseFactory.withMandatoryData(sessionDto, countdowns, targetWeek == currentWeek));
   }
