@@ -13,9 +13,9 @@ codegen:
 
 .PHONY: build
 build:
-	docker build -t rawe-ceek-backend:latest .
-	docker save rawe-ceek-backend:latest > rawe-ceek-backend.tar
+	docker buildx use container-builder
+	docker buildx build --platform linux/arm64 -t rawe-ceek-backend:latest --output type=docker,dest=image.tar .
 
 .PHONY: push
 push:
-	rsync rawe-ceek-backend.tar $(RAWE_CEEK_BACKEND_PWD)
+	rsync image.tar $(RAWE_CEEK_BACKEND_PWD)

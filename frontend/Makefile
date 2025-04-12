@@ -1,8 +1,8 @@
 .PHONY: build
 build:
-	docker build -t rawe-ceek-frontend:latest .
-	docker save rawe-ceek-frontend:latest > rawe-ceek-frontend.tar
+	docker buildx use container-builder
+	docker buildx build --platform linux/arm64 -t rawe-ceek-frontend:latest --output type=docker,dest=image.tar .
 
 .PHONY: push
 push:
-	rsync -r rawe-ceek-frontend.tar $(RAWE_CEEK_FRONTEND_PWD)
+	rsync -r image.tar $(RAWE_CEEK_FRONTEND_PWD)
