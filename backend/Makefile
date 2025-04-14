@@ -18,4 +18,4 @@ build:
 
 .PHONY: push
 push:
-	rsync image.tar $(RAWE_CEEK_BACKEND_PWD)
+	rsync image.tar root@${VPS_HOST}:/root/raweceek/backend

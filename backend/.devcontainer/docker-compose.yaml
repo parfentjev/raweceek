@@ -1,0 +1,9 @@
+services:
+  raweceek-backend-dev:
+    image: mcr.microsoft.com/devcontainers/java:21
+    network_mode: host
+    env_file:
+      - .env
+    command: ["sleep", "infinity"]
+    volumes:
+      - ../..:/workspaces:cached
