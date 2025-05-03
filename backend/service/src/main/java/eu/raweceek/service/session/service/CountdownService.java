@@ -1,14 +1,14 @@
 package eu.raweceek.service.session.service;
 
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import eu.raweceek.codegen.models.CountdownDto;
-import eu.raweceek.codegen.models.SessionDto;
 
 @Service
 public class CountdownService {
@@ -20,14 +20,62 @@ public class CountdownService {
             CountdownDto.UnitEnum.EYE_BLINKS, 3.0
     );
 
-    public List<CountdownDto> calculateRemainingTime(SessionDto sessionDto) {
-        var targetTime = DateTimeFormatter.ISO_DATE_TIME.parse(sessionDto.getStartTime(), Instant::from).getEpochSecond();
-        var currentTime = Instant.now().getEpochSecond();
-        var remainingTime = targetTime - currentTime;
+    public List<CountdownDto> getCountdowns(OffsetDateTime startTime) {
+        var remainingTime = getRemainingTime(startTime);
 
         return UNIT_SECONDS_MAP.entrySet()
                 .stream()
                 .map(e -> new CountdownDto().value(remainingTime / e.getValue()).unit(e.getKey()))
                 .toList();
+    }
+
+    public String getTimeUntil(OffsetDateTime startTime) {
+        var remainingTime = getRemainingTime(startTime);
+
+        long seconds = (remainingTime) % 60;
+        long minutes = (remainingTime / 60) % 60;
+        long hours = (remainingTime / (60 * 60)) % 24;
+        long days = (remainingTime / (60 * 60 * 24)) % 30;
+
+        long totalDays = remainingTime / (60 * 60 * 24);
+        long months = totalDays / 30;
+        long weeks = (totalDays % 30) / 7;
+
+        var result = new StringBuilder();
+        List.of(
+                Pair.of("month", months),
+                Pair.of("week", weeks),
+                Pair.of("day", days),
+                Pair.of("hour", hours),
+                Pair.of("minute", minutes)
+        )
+                .stream()
+                .filter(entry -> entry.getSecond() > 0)
+                .forEach(entry -> appendTimeUnit(result, entry.getSecond(), entry.getFirst(), ", "));
+
+        if (result.length() > 0) {
+            result.append("and ");
+        }
+
+        appendTimeUnit(result, seconds, "second", "");
+
+        return result.toString();
+    }
+
+    private long getRemainingTime(OffsetDateTime startTime) {
+        var targetTime = startTime.toEpochSecond();
+        var currentTime = Instant.now().getEpochSecond();
+
+        return targetTime - currentTime;
+    }
+
+    private void appendTimeUnit(StringBuilder builder, long value, String name, String end) {
+        builder.append(value).append(" ").append(name);
+
+        if (value > 1) {
+            builder.append("s");
+        }
+
+        builder.append(end);
     }
 }

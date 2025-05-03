@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Rawe Ceek API
-  version: 1.2.0
+  version: 1.3.0
 servers:
   - url: https://raweceek.eu/api
 tags:
@@ -84,7 +84,11 @@ components:
           example: United Arab Emirates
         startTime:
           type: string
+          format: date-time
           example: 2024-12-08T13:00Z
+        timeUntil:
+          type: string
+          example: 8 hour(s) 48 minute(s) 56 second(s)
     CountdownDto:
       type: object
       required:

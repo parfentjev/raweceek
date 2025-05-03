@@ -1,9 +1,11 @@
 services:
   raweceek-backend-dev:
-    image: mcr.microsoft.com/devcontainers/java:21
+    image: maven:3.9.9-eclipse-temurin-21-alpine
     network_mode: host
     env_file:
       - .env
     command: ["sleep", "infinity"]
     volumes:
       - ../..:/workspaces:cached
+    ports:
+      - 8080:8080

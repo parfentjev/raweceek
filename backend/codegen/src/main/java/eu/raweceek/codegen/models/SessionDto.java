@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import java.time.OffsetDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -18,14 +20,17 @@ import jakarta.annotation.Generated;
  * SessionDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0-SNAPSHOT")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.14.0-SNAPSHOT")
 public class SessionDto {
 
   private String summary;
 
   private String location;
 
-  private String startTime;
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private OffsetDateTime startTime;
+
+  private @Nullable String timeUntil;
 
   public SessionDto() {
     super();
@@ -34,7 +39,7 @@ public class SessionDto {
   /**
    * Constructor with only required parameters
    */
-  public SessionDto(String summary, String location, String startTime) {
+  public SessionDto(String summary, String location, OffsetDateTime startTime) {
     this.summary = summary;
     this.location = location;
     this.startTime = startTime;
@@ -80,7 +85,7 @@ public class SessionDto {
     this.location = location;
   }
 
-  public SessionDto startTime(String startTime) {
+  public SessionDto startTime(OffsetDateTime startTime) {
     this.startTime = startTime;
     return this;
   }
@@ -89,15 +94,35 @@ public class SessionDto {
    * Get startTime
    * @return startTime
    */
-  @NotNull 
+  @NotNull @Valid 
   @Schema(name = "startTime", example = "2024-12-08T13:00Z", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("startTime")
-  public String getStartTime() {
+  public OffsetDateTime getStartTime() {
     return startTime;
   }
 
-  public void setStartTime(String startTime) {
+  public void setStartTime(OffsetDateTime startTime) {
     this.startTime = startTime;
+  }
+
+  public SessionDto timeUntil(String timeUntil) {
+    this.timeUntil = timeUntil;
+    return this;
+  }
+
+  /**
+   * Get timeUntil
+   * @return timeUntil
+   */
+  
+  @Schema(name = "timeUntil", example = "8 hour(s) 48 minute(s) 56 second(s)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("timeUntil")
+  public String getTimeUntil() {
+    return timeUntil;
+  }
+
+  public void setTimeUntil(String timeUntil) {
+    this.timeUntil = timeUntil;
   }
 
   @Override
@@ -111,12 +136,13 @@ public class SessionDto {
     SessionDto sessionDto = (SessionDto) o;
     return Objects.equals(this.summary, sessionDto.summary) &&
         Objects.equals(this.location, sessionDto.location) &&
-        Objects.equals(this.startTime, sessionDto.startTime);
+        Objects.equals(this.startTime, sessionDto.startTime) &&
+        Objects.equals(this.timeUntil, sessionDto.timeUntil);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(summary, location, startTime);
+    return Objects.hash(summary, location, startTime, timeUntil);
   }
 
   @Override
@@ -126,6 +152,7 @@ public class SessionDto {
     sb.append("    summary: ").append(toIndentedString(summary)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    startTime: ").append(toIndentedString(startTime)).append("\n");
+    sb.append("    timeUntil: ").append(toIndentedString(timeUntil)).append("\n");
     sb.append("}");
     return sb.toString();
   }

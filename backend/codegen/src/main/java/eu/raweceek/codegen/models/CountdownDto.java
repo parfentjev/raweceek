@@ -19,7 +19,7 @@ import jakarta.annotation.Generated;
  * CountdownDto
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.12.0-SNAPSHOT")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.14.0-SNAPSHOT")
 public class CountdownDto {
 
   private Double value = null;
@@ -36,7 +36,7 @@ public class CountdownDto {
     
     EYE_BLINKS("eye blinks");
 
-    private String value;
+    private final String value;
 
     UnitEnum(String value) {
       this.value = value;

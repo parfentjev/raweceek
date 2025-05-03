@@ -6,10 +6,11 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class SessionFactory {
-  public SessionDto mapToDto(Session session) {
-    return new SessionDto()
-      .summary(session.getSummary())
-      .location(session.getLocation())
-      .startTime(session.getStartTime().toString());
-  }
+
+    public SessionDto mapToDto(Session session) {
+        return new SessionDto()
+                .summary(session.getSummary())
+                .location(session.getLocation())
+                .startTime(session.getStartTime());
+    }
 }
