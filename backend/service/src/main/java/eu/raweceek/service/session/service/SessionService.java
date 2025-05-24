@@ -20,15 +20,15 @@ public class SessionService {
     @Autowired
     private CountdownService countdownService;
 
-    public List<SessionDto> getSessions() {
-        return sessionRepository.findUpcoming()
+    public List<SessionDto> getSessions(String series) {
+        return sessionRepository.findUpcoming(series)
                 .stream()
                 .map(this::mapToDto)
                 .toList();
     }
 
-    public SessionDto nextSession() {
-        return mapToDto(sessionRepository.findNext().orElseThrow(NoSuchElementException::new));
+    public SessionDto nextSession(String series) {
+        return mapToDto(sessionRepository.findNext(series).orElseThrow(NoSuchElementException::new));
     }
 
     private SessionDto mapToDto(Session session) {

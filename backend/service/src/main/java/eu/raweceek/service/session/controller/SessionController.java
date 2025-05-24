@@ -25,18 +25,18 @@ public class SessionController implements SessionsApi {
     private CountdownService countdownService;
 
     @Override
-    public ResponseEntity<List<SessionDto>> sessionsGet() {
-        return ResponseEntity.ok(sessionService.getSessions());
+    public ResponseEntity<List<SessionDto>> sessionsGet(String series) {
+        return ResponseEntity.ok(sessionService.getSessions(series));
     }
 
     @Override
-    public ResponseEntity<SessionDto> sessionsNextGet() {
-        return ResponseEntity.ok(sessionService.nextSession());
+    public ResponseEntity<SessionDto> sessionsNextGet(String series) {
+        return ResponseEntity.ok(sessionService.nextSession(series));
     }
 
     @Override
-    public ResponseEntity<SessionsCountdownGet200Response> sessionsCountdownGet() {
-        var sessionDto = sessionService.nextSession();
+    public ResponseEntity<SessionsCountdownGet200Response> sessionsCountdownGet(String series) {
+        var sessionDto = sessionService.nextSession(series);
         var countdowns = countdownService.getCountdowns(sessionDto.getStartTime());
 
         var targetWeek = sessionDto.getStartTime().get(WeekFields.ISO.weekOfYear());

@@ -34,4 +34,7 @@ public class Session {
 
     @Column(nullable = false)
     OffsetDateTime startTime;
+
+    @Column(nullable = false)
+    String series;
 }

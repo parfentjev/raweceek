@@ -42,6 +42,7 @@ public interface SessionsApi {
     /**
      * GET /sessions/countdown
      *
+     * @param series The racing series to filter sessions by (optional, default to f1)
      * @return Countdown until the next session by startTime (status code 200)
      *         or Next session not found (status code 404)
      */
@@ -62,13 +63,14 @@ public interface SessionsApi {
     )
     
     ResponseEntity<SessionsCountdownGet200Response> sessionsCountdownGet(
-        
+        @Parameter(name = "series", description = "The racing series to filter sessions by", in = ParameterIn.QUERY) @Valid @RequestParam(value = "series", required = false, defaultValue = "f1") String series
     );
 
 
     /**
      * GET /sessions
      *
+     * @param series The racing series to filter sessions by (optional, default to f1)
      * @return List of upcoming sessions (status code 200)
      */
     @Operation(
@@ -87,13 +89,14 @@ public interface SessionsApi {
     )
     
     ResponseEntity<List<SessionDto>> sessionsGet(
-        
+        @Parameter(name = "series", description = "The racing series to filter sessions by", in = ParameterIn.QUERY) @Valid @RequestParam(value = "series", required = false, defaultValue = "f1") String series
     );
 
 
     /**
      * GET /sessions/next
      *
+     * @param series The racing series to filter sessions by (optional, default to f1)
      * @return Next session by startTime (status code 200)
      *         or Not found (status code 404)
      */
@@ -114,7 +117,7 @@ public interface SessionsApi {
     )
     
     ResponseEntity<SessionDto> sessionsNextGet(
-        
+        @Parameter(name = "series", description = "The racing series to filter sessions by", in = ParameterIn.QUERY) @Valid @RequestParam(value = "series", required = false, defaultValue = "f1") String series
     );
 
 }

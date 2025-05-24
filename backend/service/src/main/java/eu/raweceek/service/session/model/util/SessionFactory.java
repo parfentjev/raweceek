@@ -11,6 +11,7 @@ public class SessionFactory {
         return new SessionDto()
                 .summary(session.getSummary())
                 .location(session.getLocation())
-                .startTime(session.getStartTime());
+                .startTime(session.getStartTime())
+                .series(session.getSeries());
     }
 }

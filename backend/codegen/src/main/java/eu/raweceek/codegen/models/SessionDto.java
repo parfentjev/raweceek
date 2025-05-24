@@ -30,7 +30,9 @@ public class SessionDto {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime startTime;
 
-  private @Nullable String timeUntil;
+  private String timeUntil;
+
+  private String series;
 
   public SessionDto() {
     super();
@@ -39,10 +41,12 @@ public class SessionDto {
   /**
    * Constructor with only required parameters
    */
-  public SessionDto(String summary, String location, OffsetDateTime startTime) {
+  public SessionDto(String summary, String location, OffsetDateTime startTime, String timeUntil, String series) {
     this.summary = summary;
     this.location = location;
     this.startTime = startTime;
+    this.timeUntil = timeUntil;
+    this.series = series;
   }
 
   public SessionDto summary(String summary) {
@@ -114,8 +118,8 @@ public class SessionDto {
    * Get timeUntil
    * @return timeUntil
    */
-  
-  @Schema(name = "timeUntil", example = "8 hour(s) 48 minute(s) 56 second(s)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "timeUntil", example = "8 hour(s) 48 minute(s) 56 second(s)", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("timeUntil")
   public String getTimeUntil() {
     return timeUntil;
@@ -123,6 +127,26 @@ public class SessionDto {
 
   public void setTimeUntil(String timeUntil) {
     this.timeUntil = timeUntil;
+  }
+
+  public SessionDto series(String series) {
+    this.series = series;
+    return this;
+  }
+
+  /**
+   * Get series
+   * @return series
+   */
+  @NotNull 
+  @Schema(name = "series", example = "f1", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("series")
+  public String getSeries() {
+    return series;
+  }
+
+  public void setSeries(String series) {
+    this.series = series;
   }
 
   @Override
@@ -137,12 +161,13 @@ public class SessionDto {
     return Objects.equals(this.summary, sessionDto.summary) &&
         Objects.equals(this.location, sessionDto.location) &&
         Objects.equals(this.startTime, sessionDto.startTime) &&
-        Objects.equals(this.timeUntil, sessionDto.timeUntil);
+        Objects.equals(this.timeUntil, sessionDto.timeUntil) &&
+        Objects.equals(this.series, sessionDto.series);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(summary, location, startTime, timeUntil);
+    return Objects.hash(summary, location, startTime, timeUntil, series);
   }
 
   @Override
@@ -153,6 +178,7 @@ public class SessionDto {
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    startTime: ").append(toIndentedString(startTime)).append("\n");
     sb.append("    timeUntil: ").append(toIndentedString(timeUntil)).append("\n");
+    sb.append("    series: ").append(toIndentedString(series)).append("\n");
     sb.append("}");
     return sb.toString();
   }
