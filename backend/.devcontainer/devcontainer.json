@@ -1,7 +1,7 @@
 {
     "name": "Java 21 Development",
     "dockerComposeFile": "docker-compose.yaml",
-    "service": "raweceek-backend-dev",
+    "service": "java-21-maven",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "customizations": {
         "vscode": {

@@ -1,0 +1,6 @@
+{
+    "name": "Pyton Development",
+    "dockerComposeFile": "docker-compose.yaml",
+    "service": "python-3-13",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+}
