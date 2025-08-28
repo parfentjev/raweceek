@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+
+<body>
+<div layout:fragment="content">
+  <p><img src=/img/welcome.gif></p>
+  <div class="menu">
+    <a href="http://users4.smartgb.com/g/g.php?a=s&i=g44-82594-15" target="_blank">
+      <img src="/img/guest-book.gif" alt="Guest book">
+    </a>
+    <a href="https://www.formula1.com/en/racing/2025" target="_blank">
+      <img src="/img/calendar.gif" alt="Racing calendar">
+    </a>
+    <a href="#api-specification">
+      <img src="/img/api.gif" alt="API specification">
+    </a>
+  </div>
+  <p><img src="/img/under-construction.gif" alt="Under construction sign"></p>
+  <div th:if="${nextSession.thisWeek}">
+    <marquee direction="right" behavior="alternate" scrollamount="25">
+      <h1>
+        <span style="color: red">T</span>
+        <span style="color: orange">H</span>
+        <span style="color: yellow">I</span>
+        <span style="color: green">S</span>
+        <span> </span>
+        <span style="color: blue">W</span>
+        <span style="color: indigo">E</span>
+        <span style="color: violet">E</span>
+        <span style="color: red">K</span>
+        <span> </span>
+        <span style="color: orange">I</span>
+        <span style="color: yellow">S</span>
+        <span> </span>
+        <span style="color: green">A</span>
+        <span> </span>
+        <span style="color: blue">R</span>
+        <span style="color: indigo">A</span>
+        <span style="color: violet">C</span>
+        <span style="color: red">E</span>
+        <span> </span>
+        <span style="color: orange">W</span>
+        <span style="color: yellow">E</span>
+        <span style="color: green">E</span>
+        <span style="color: blue">K</span>
+      </h1>
+    </marquee>
+  </div>
+  <p th:unless="${nextSession.thisWeek}">This week is not a race week :(</p>
+  <p>"How long should <i>I</i> wait until the next session???" Only...</p>
+  <ul th:each="countdown, iter : ${nextSession.countdowns}">
+    <li th:class="'color-' + ${iter.index}" th:text="${countdown.value}">Countdown</li>
+  </ul>
+  <p class="extra-margin"><img src=/img/checkered-flag.gif><img src=/img/racecar.gif><img
+    src=/img/checkered-flag.gif></p>
+  <p>'But how do you know that???' you might ask.</p>
+  <p class="extra-margin"><img src=/img/super-easy.gif></p>
+  <p>I say! Thanks to this majestic...</p>
+  <p class="extra-margin"><img src=/img/rest-api-service.gif></p>
+  <p>I only need to make one request to know when is the next racing session!</p>
+  <p class="extra-margin"><img src=/img/is-that-curl.gif></p>
+  <p>YES, <span style="font-style: italic; text-decoration: underline; font-weight: bold;">IT IS!!!</span></p>
+  <p id="api-specification">$ curl https://raweceek.eu/api/next-session</p>
+  <p>{"summary":"\uD83C\uDFCE FORMULA 1 HEINEKEN DUTCH GRAND PRIX 2025 - Practice
+    1","location":"Netherlands","startTime":"2025-08-29T10:30:00Z","thisWeek":true,"countdowns":[{"type":"CEEKS","value":"0.10
+    ceeks"},{"type":"TIME_UNTIL","value":"17 hours 32 minutes and 12 seconds"}]}</p>
+  <p><img src=/img/under-construction.gif></p>
+  <div class="buttons">
+    <p><img src=/img/buttons/100hot.gif><img src=/img/buttons/abinow.gif><img src=/img/buttons/acrobat.gif><img
+      src=/img/buttons/aimlink.gif><img src=/img/buttons/amazing_free_stuff.gif></p>
+    <p><img src=/img/buttons/adv_rar2.gif><img src=/img/buttons/classicgaming.gif><img
+      src=/img/buttons/divx.gif><img src=/img/buttons/free-webhosts.gif><img src=/img/buttons/gc_icon.gif>
+    </p>
+    <p><img src=/img/buttons/get_java.gif><img src=/img/buttons/google_25wht.gif><img
+      src=/img/buttons/hatemac.jpg><img src=/img/buttons/hotmail.gif><img src=/img/buttons/html.gif></p>
+    <p><img src=/img/buttons/linux_powered.gif><img src=/img/buttons/microsoft_frontpage.gif><img
+      src=/img/buttons/mircnow.gif><img src=/img/buttons/mp3button.gif><img src=/img/buttons/mysql5.gif>
+    </p>
+    <p><img src=/img/buttons/shbutton.gif><img src=/img/buttons/stockobjects.gif><img
+      src=/img/buttons/top50w.gif><img src=/img/buttons/winfiles.gif><img src=/img/buttons/winzip.gif></p>
+  </div>
+</div>
+</body>
+
+</html>

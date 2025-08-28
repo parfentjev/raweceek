@@ -1,14 +1,5 @@
-# configuration
+.m2/
 .idea/
-.vscode
 .env
-
-# misc
-*.tar
-
-# backend
 target/
-
-# frontend
-env/
-
+*.tar

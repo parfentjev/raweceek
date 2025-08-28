@@ -1,0 +1,82 @@
+html {
+    background-image: url(/img/background.gif);
+    color: #dedede;
+}
+
+body {
+    max-width: 1280px;
+    margin: 3rem auto;
+}
+
+h1 {
+    font-size: 32px;
+    /* IE6 fallback */
+    font-size: 4rem;
+}
+
+li {
+    list-style: none;
+}
+
+.menu a {
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.menu a img {
+    border: none;
+}
+
+.content {
+    text-align: center;
+}
+
+.extra-margin {
+    margin: 3rem 0;
+}
+
+.buttons p {
+    padding: 0;
+    margin: 0;
+}
+
+.color-0 {
+    color: red;
+}
+
+.color-1 {
+    color: orange;
+}
+
+.color-2 {
+    color: yellow;
+}
+
+.color-3 {
+    color: green;
+}
+
+.color-4 {
+    color: blue;
+}
+
+.color-5 {
+    color: indigo;
+}
+
+.color-6 {
+    color: violet;
+}
+
+@media screen and (max-width: 1280px) {
+    body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    img {
+        max-width: 100%;
+    }
+}

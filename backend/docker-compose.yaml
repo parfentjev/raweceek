@@ -1,9 +1,0 @@
-services:
-  api:
-    image: rawe-ceek-backend
-    container_name: rawe-ceek-backend
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      - "8090:8080"
