@@ -1,8 +1,7 @@
 package eu.raweceek.service;
 
-import eu.raweceek.model.CountdownDto;
-import eu.raweceek.model.CountdownType;
-import eu.raweceek.model.SessionDto;
+import eu.raweceek.codegen.model.CountdownDto;
+import eu.raweceek.codegen.model.SessionDto;
 import eu.raweceek.repository.SessionRepository;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class SessionService {
     this.repository = repository;
   }
 
-  public SessionDto getNextSession() {
+  public eu.raweceek.codegen.model.SessionDto getNextSession() {
     var session = repository.findNext();
     if (session == null) return null;
 
@@ -35,13 +34,12 @@ public class SessionService {
     var timeUntil = calculateTimeUntil(remainingTime);
     var ceeks = calculateCeeks(remainingTime);
 
-    return new SessionDto(
-      session.getSummary(),
-      session.getLocation(),
-      session.getStartTime(),
-      thisWeek,
-      Set.of(timeUntil, ceeks)
-    );
+    return new SessionDto()
+      .summary(session.getSummary())
+      .location(session.getLocation())
+      .startTime(session.getStartTime())
+      .thisWeek(thisWeek)
+      .countdowns(Set.of(timeUntil, ceeks));
   }
 
   public CountdownDto calculateTimeUntil(long remainingTime) {
@@ -71,7 +69,7 @@ public class SessionService {
 
     appendTimeUnit(result, seconds, "second", "");
 
-    return new CountdownDto(CountdownType.TIME_UNTIL, result.toString());
+    return new CountdownDto().type(CountdownDto.TypeEnum.TIME_UNTIL).value(result.toString());
   }
 
   private long calculateRemainingTime(OffsetDateTime startTime) {
@@ -94,6 +92,6 @@ public class SessionService {
   private CountdownDto calculateCeeks(long remainingTime) {
     var result = String.format("%.2f ceeks", remainingTime / SECONDS_IN_WEEK);
 
-    return new CountdownDto(CountdownType.CEEKS, result);
+    return new CountdownDto().type(CountdownDto.TypeEnum.CEEKS).value(result);
   }
 }

@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: Raweceek API
+  version: 1.0.0
+  contact:
+    url: https://raweceek.eu
+servers:
+  - url: https://raweceek.eu
+    description: Production server
+  - url: http://localhost:8080
+    description: Development server
+
+paths:
+  /api/next-session:
+    get:
+      summary: Get next session
+      description: Retrieves the next upcoming session with details
+      operationId: getNextSession
+      tags:
+        - Session
+      responses:
+        '200':
+          description: Next session found and returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionDto'
+              example:
+                summary: "🏎 HEINEKEN DUTCH GRAND PRIX 2025 - Practice 1"
+                location: "Netherlands"
+                startTime: "2025-08-29T10:30:00Z"
+                thisWeek: true
+                countdowns:
+                  - type: "CEEKS"
+                    value: "0.10 ceeks"
+                  - type: "TIME_UNTIL"
+                    value: "17 hours 32 minutes and 12 seconds"
+        '404':
+          description: No upcoming session found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    SessionDto:
+      type: object
+      required:
+        - summary
+        - location
+        - startTime
+        - thisWeek
+        - countdowns
+      properties:
+        summary:
+          type: string
+          description: Brief summary or title of the session/race
+          example: "🏎 HEINEKEN DUTCH GRAND PRIX 2025 - Practice 1"
+        location:
+          type: string
+          description: Country or location where the event takes place
+          example: "Netherlands"
+        startTime:
+          type: string
+          format: date-time
+          description: The start date and time of the session in ISO 8601 format (UTC)
+          example: "2025-08-29T10:30:00Z"
+        thisWeek:
+          type: boolean
+          description: Indicates whether the session occurs within the current week
+          example: true
+        countdowns:
+          type: array
+          description: Set of countdown timers for the session
+          items:
+            $ref: '#/components/schemas/CountdownDto'
+          uniqueItems: true
+
+    CountdownDto:
+      type: object
+      required:
+        - type
+        - value
+      properties:
+        type:
+          type: string
+          description: The type of countdown unit
+          enum:
+            - CEEKS
+            - TIME_UNTIL
+          example: "CEEKS"
+        value:
+          type: string
+          description: The countdown value as a formatted string
+          example: "0.10 ceeks"
+
+tags:
+  - name: NextSession
