@@ -9,4 +9,4 @@ build:
 
 .PHONY: push
 push:
-	rsync image.tar ${VPS_USER}@${VPS_HOST}:${VPS_PUSH_PATH}
+	rsync --progress image.tar ${VPS_USER}@${VPS_HOST}:${VPS_PUSH_PATH}
