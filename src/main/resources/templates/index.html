@@ -11,42 +11,23 @@
     <a href="https://www.formula1.com/en/racing/2025" target="_blank">
       <img src="/img/calendar.gif" alt="Racing calendar">
     </a>
-    <a href="https://codeberg.org/parfentjev/raweceek/src/branch/master/spec/contract.yaml" target="_blank">
+    <a href="https://github.com/parfentjev/raweceek/tree/master/src/spec/contract.yaml" target="_blank">
       <img src="/img/api.gif" alt="API specification">
     </a>
   </div>
   <p><img src="/img/under-construction.gif" alt="Under construction sign"></p>
-  <div th:if="${nextSession.thisWeek}">
+  <div th:if="${isRaceWeek}">
     <marquee direction="right" behavior="alternate" scrollamount="25">
-      <h1 id="raweceek">
-        <span>T</span>
-        <span>H</span>
-        <span>I</span>
-        <span>S</span>
-        <span> </span>
-        <span>W</span>
-        <span>E</span>
-        <span>E</span>
-        <span>K</span>
-        <span> </span>
-        <span>I</span>
-        <span>S</span>
-        <span> </span>
-        <span>A</span>
-        <span> </span>
-        <span>R</span>
-        <span>A</span>
-        <span>C</span>
-        <span>E</span>
-        <span> </span>
-        <span>W</span>
-        <span>E</span>
-        <span>E</span>
-        <span>K</span>
+      <h1>
+        <th:block th:with="text=${'THIS WEEK IS A RACE WEEK'}">
+            <span th:each="i : ${#numbers.sequence(0, #strings.length(text) - 1)}"
+                  th:text="${#strings.substring(text, i, i + 1)}"
+                  th:class="${'color-' + (i % 7)}"></span>
+        </th:block>
       </h1>
     </marquee>
   </div>
-  <p th:unless="${nextSession.thisWeek}">This week is not a race week :(</p>
+  <p th:unless="${isRaceWeek}">This week is not a race week :(</p>
   <p>"How long should <i>I</i> wait until the next session???" Only...</p>
   <ul th:each="countdown, iter : ${nextSession.countdowns}">
     <li th:class="'color-' + ${iter.index}" th:text="${countdown.value}">Countdown</li>
@@ -61,9 +42,7 @@
   <p class="extra-margin"><img src=/img/is-that-curl.gif></p>
   <p>YES, <span class="accent">IT IS!!!</span></p>
   <p id="api-specification">$ curl https://raweceek.eu/api/next-session</p>
-  <p>{"summary":"\uD83C\uDFCE FORMULA 1 HEINEKEN DUTCH GRAND PRIX 2025 - Practice
-    1","location":"Netherlands","startTime":"2025-08-29T10:30:00Z","thisWeek":true,"countdowns":[{"type":"CEEKS","value":"0.10
-    ceeks"},{"type":"TIME_UNTIL","value":"17 hours 32 minutes and 12 seconds"}]}</p>
+  <p th:text="${json}"></p>
   <p><img src=/img/under-construction.gif></p>
   <div class="buttons">
     <p><img src=/img/buttons/100hot.gif><img src=/img/buttons/abinow.gif><img src=/img/buttons/acrobat.gif><img

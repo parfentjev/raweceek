@@ -1,6 +1,6 @@
 root = true
 
-[*.{java,html,css}]
+[*.{html,css}]
 indent_size = 2
 
 [Makefile]

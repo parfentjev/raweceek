@@ -1,5 +1,4 @@
-.m2/
 .idea/
 .env
 target/
-*.tar
+notes.md

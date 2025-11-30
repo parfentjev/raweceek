@@ -5,15 +5,26 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface SessionRepository extends CrudRepository<Session, String> {
-  @Query(value = """
+  @Query(
+      value =
+          """
     select * from session
     where start_time > now()
     order by start_time
     limit 1
-    """, nativeQuery = true)
+    """,
+      nativeQuery = true)
   Session findNext();
+
+  @Query(
+      value =
+          """
+        select count(*) from session
+        where year(start_time) = year(curdate())
+        and week(start_time, 1) = week(curdate(), 1)
+        """,
+      nativeQuery = true)
+  Integer countThisWeek();
 }

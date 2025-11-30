@@ -3,14 +3,13 @@ package eu.raweceek.service;
 import eu.raweceek.codegen.model.CountdownDto;
 import eu.raweceek.codegen.model.SessionDto;
 import eu.raweceek.repository.SessionRepository;
-import org.springframework.data.util.Pair;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.temporal.WeekFields;
 import java.util.Set;
 import java.util.stream.Stream;
+import org.springframework.data.util.Pair;
+import org.springframework.stereotype.Service;
 
 @Service
 public class SessionService {
@@ -22,7 +21,7 @@ public class SessionService {
     this.repository = repository;
   }
 
-  public eu.raweceek.codegen.model.SessionDto getNextSession() {
+  public SessionDto getNextSession() {
     var session = repository.findNext();
     if (session == null) return null;
 
@@ -35,14 +34,18 @@ public class SessionService {
     var ceeks = calculateCeeks(remainingTime);
 
     return new SessionDto()
-      .summary(session.getSummary())
-      .location(session.getLocation())
-      .startTime(session.getStartTime())
-      .thisWeek(thisWeek)
-      .countdowns(Set.of(timeUntil, ceeks));
+        .summary(session.getSummary())
+        .location(session.getLocation())
+        .startTime(session.getStartTime())
+        .thisWeek(thisWeek)
+        .countdowns(Set.of(timeUntil, ceeks));
   }
 
-  public CountdownDto calculateTimeUntil(long remainingTime) {
+  public boolean isRaceWeek() {
+    return repository.countThisWeek() > 0;
+  }
+
+  private CountdownDto calculateTimeUntil(long remainingTime) {
     long seconds = (remainingTime) % 60;
     long minutes = (remainingTime / 60) % 60;
     long hours = (remainingTime / (60 * 60)) % 24;
@@ -54,14 +57,13 @@ public class SessionService {
 
     var result = new StringBuilder();
     Stream.of(
-        Pair.of(months, "month"),
-        Pair.of(weeks, "week"),
-        Pair.of(days, "day"),
-        Pair.of(hours, "hour"),
-        Pair.of(minutes, "minute")
-      )
-      .filter(entry -> entry.getFirst() > 0)
-      .forEach(entry -> appendTimeUnit(result, entry.getFirst(), entry.getSecond(), " "));
+            Pair.of(months, "month"),
+            Pair.of(weeks, "week"),
+            Pair.of(days, "day"),
+            Pair.of(hours, "hour"),
+            Pair.of(minutes, "minute"))
+        .filter(entry -> entry.getFirst() > 0)
+        .forEach(entry -> appendTimeUnit(result, entry.getFirst(), entry.getSecond(), " "));
 
     if (!result.isEmpty()) {
       result.append("and ");

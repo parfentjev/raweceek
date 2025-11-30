@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class SessionController implements SessionApi {
+public class ApiController implements SessionApi {
   private final SessionService sessionService;
 
-  public SessionController(SessionService sessionService) {
+  public ApiController(SessionService sessionService) {
     this.sessionService = sessionService;
   }
 
