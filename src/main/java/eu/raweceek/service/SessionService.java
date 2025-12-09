@@ -1,8 +1,5 @@
 package eu.raweceek.service;
 
-import eu.raweceek.codegen.model.CountdownDto;
-import eu.raweceek.codegen.model.SessionDto;
-import eu.raweceek.repository.SessionRepository;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.temporal.WeekFields;
@@ -10,6 +7,9 @@ import java.util.Set;
 import java.util.stream.Stream;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import eu.raweceek.codegen.model.CountdownDto;
+import eu.raweceek.codegen.model.SessionDto;
+import eu.raweceek.repository.SessionRepository;
 
 @Service
 public class SessionService {
@@ -49,7 +49,7 @@ public class SessionService {
     long seconds = (remainingTime) % 60;
     long minutes = (remainingTime / 60) % 60;
     long hours = (remainingTime / (60 * 60)) % 24;
-    long days = (remainingTime / (60 * 60 * 24)) % 30;
+    long days = (remainingTime / (60 * 60 * 24)) % 7;
 
     long totalDays = remainingTime / (60 * 60 * 24);
     long months = totalDays / 30;
