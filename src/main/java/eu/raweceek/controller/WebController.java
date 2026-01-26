@@ -38,6 +38,6 @@ public class WebController {
     model.addAllAttributes(
         Map.of("nextSession", nextSession, "isRaceWeek", isRaceWeek, "json", nextSessionJson));
 
-    return "index";
+    return "home";
   }
 }

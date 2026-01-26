@@ -1,0 +1,264 @@
+:root {
+  --color-primary: #dc0000;
+  --color-primary-light: #ff3333;
+  --color-primary-dark: #990000;
+  --color-primary-darker: #cc0000;
+  --color-black: #000;
+  --color-white: #fff;
+  --color-text: #333;
+  --color-text-light: #666;
+  --color-grey-light: #f5f5f5;
+  --color-grey-border: #ccc;
+  --color-yellow-light: #ffff99;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 12px;
+  background-image: url("/img/background.svg");
+  color: var(--color-text);
+}
+
+#container {
+  width: 900px;
+  margin: 20px auto;
+  background-color: var(--color-white);
+  border: 3px solid var(--color-primary);
+}
+
+header {
+  background: url("/img/logo.webp") center center;
+  background-size: cover;
+  padding: 20px;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+header a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+header a:hover {
+  opacity: 0.95;
+  cursor: pointer;
+}
+
+h1 {
+  color: var(--color-white);
+  font-size: 32px;
+  text-shadow: 2px 2px var(--color-black);
+  margin-bottom: 5px;
+}
+
+.tagline {
+  color: var(--color-yellow-light);
+  font-style: italic;
+}
+
+nav {
+  background: linear-gradient(
+    to bottom,
+    var(--color-primary-darker),
+    var(--color-primary-dark)
+  );
+  border-bottom: 2px solid var(--color-primary-dark);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+}
+
+nav li {
+  border-right: 2px solid var(--color-primary-light);
+}
+
+nav li:last-child {
+  border-right: none;
+}
+
+nav a {
+  display: block;
+  padding: 10px 20px;
+  color: var(--color-white);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-black);
+}
+
+#content-wrapper {
+  display: flex;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+  border-right: 2px solid var(--color-grey-border);
+}
+
+aside {
+  width: 220px;
+  padding: 15px;
+  background-color: var(--color-grey-light);
+}
+
+article {
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-primary);
+  border-radius: 5px;
+}
+
+article h2 {
+  color: var(--color-primary);
+  font-size: 18px;
+  margin-bottom: 8px;
+  border-bottom: 2px dotted var(--color-primary);
+  padding-bottom: 5px;
+}
+
+p {
+  margin: 0.5rem;
+}
+
+.post-meta {
+  font-size: 10px;
+  color: var(--color-text-light);
+  margin-bottom: 10px;
+}
+
+.widget {
+  margin-bottom: 20px;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-primary);
+  padding: 10px;
+}
+
+.widget h3 {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: 5px;
+  margin: -10px -10px 10px -10px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.widget ul {
+  list-style: square;
+  margin-left: 20px;
+}
+
+.widget li {
+  margin-bottom: 5px;
+}
+
+.widget a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.widget a:hover {
+  text-decoration: underline;
+  color: var(--color-black);
+}
+
+footer {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  text-align: center;
+  padding: 15px;
+  font-size: 11px;
+  border-top: 3px solid var(--color-primary);
+}
+
+footer a {
+  color: var(--color-primary);
+}
+
+.race-calendar {
+  width: 100%;
+  font-size: 10px;
+  border-collapse: collapse;
+}
+
+.race-calendar th {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: 4px 2px;
+  text-align: left;
+}
+
+.race-calendar td {
+  padding: 3px 2px;
+  border-bottom: 1px solid var(--color-grey-border);
+}
+
+.race-calendar tr:last-child td {
+  border-bottom: none;
+}
+
+.race-calendar td:first-child {
+  font-weight: bold;
+  color: var(--color-primary);
+  text-align: center;
+  width: 20px;
+}
+
+.race-calendar td:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  #container {
+    width: 100%;
+    margin: 10px 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  header {
+    background-position: left center;
+    background-size: auto 100%;
+    min-height: 100px;
+  }
+
+  #content-wrapper {
+    flex-direction: column;
+  }
+
+  main {
+    border-right: none;
+    border-bottom: 2px solid var(--color-grey-border);
+  }
+
+  aside {
+    width: auto;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+}

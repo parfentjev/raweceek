@@ -1,20 +1,229 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!doctype html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+  <head>
+    <title>Rawe Ceek - Is it a race week?</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Welcome to RaweCeek - the totally tubular F1 Race Week countdown! Here you can discover when the next Grand Prix session blasts off - it's awesome!?"
+    />
+    <link rel="icon" th:href="@{/favicon.ico}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
 
-<head>
-  <title>Rawe Ceek - Is it a race week?</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description"
-        content="Welcome to RaweCeek - the totally tubular F1 Race Week countdown! Here you can discover when the next Grand Prix session blasts off - it's awesome!?">
-  <link rel="icon" th:href="@{/favicon.ico}">
-  <link rel="stylesheet" th:href="@{/css/main.css}">
-</head>
+  <body>
+    <div id="container">
+      <a href="/"><header></header></a>
 
-<body>
-<main>
-  <div layout:fragment="content" class="content"></div>
-</main>
-</body>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li>
+            <a href="https://www.formula1.com/en/latest" target="_blank"
+              >News</a
+            >
+          </li>
+          <li>
+            <a href="https://www.formula1.com/en/drivers" target="_blank"
+              >Drivers</a
+            >
+          </li>
+          <li>
+            <a href="https://www.formula1.com/en/teams" target="_blank"
+              >Teams</a
+            >
+          </li>
+          <li>
+            <a href="https://www.formula1.com/en/racing/2026" target="_blank"
+              >Schedule</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://users4.smartgb.com/g/g.php?a=s&i=g44-82594-15"
+              target="_blank"
+              >Forum</a
+            >
+          </li>
+        </ul>
+      </nav>
 
+      <div id="content-wrapper">
+        <main>
+          <div layout:fragment="content"></div>
+        </main>
+
+        <aside>
+          <div class="widget">
+            <h3>📅 Calendar</h3>
+            <table class="race-calendar">
+              <tr>
+                <th>#</th>
+                <th>Grand Prix</th>
+                <th>Dates</th>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Australian GP</td>
+                <td>06.03 - 08.03</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Chinese GP</td>
+                <td>13.03 - 15.03</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Japanese GP</td>
+                <td>27.03 - 29.03</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Bahrain GP</td>
+                <td>10.04 - 12.04</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Saudi Arabian GP</td>
+                <td>17.04 - 19.04</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Miami GP</td>
+                <td>01.05 - 03.05</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Canadian GP</td>
+                <td>22.05 - 24.05</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Monaco GP</td>
+                <td>05.06 - 07.06</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Barcelona GP</td>
+                <td>12.06 - 14.06</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>Austrian GP</td>
+                <td>26.06 - 28.06</td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>British GP</td>
+                <td>03.07 - 05.07</td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>Belgian GP</td>
+                <td>17.07 - 19.07</td>
+              </tr>
+              <tr>
+                <td>13</td>
+                <td>Hungarian GP</td>
+                <td>24.07 - 26.07</td>
+              </tr>
+              <tr>
+                <td>14</td>
+                <td>Dutch GP</td>
+                <td>21.08 - 23.08</td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td>Italian GP</td>
+                <td>04.09 - 06.09</td>
+              </tr>
+              <tr>
+                <td>16</td>
+                <td>Spanish GP</td>
+                <td>11.09 - 13.09</td>
+              </tr>
+              <tr>
+                <td>17</td>
+                <td>Azerbaijan GP</td>
+                <td>24.09 - 26.09</td>
+              </tr>
+              <tr>
+                <td>18</td>
+                <td>Singapore GP</td>
+                <td>09.10 - 11.10</td>
+              </tr>
+              <tr>
+                <td>19</td>
+                <td>US GP</td>
+                <td>23.10 - 25.10</td>
+              </tr>
+              <tr>
+                <td>20</td>
+                <td>Mexico GP</td>
+                <td>30.10 - 01.11</td>
+              </tr>
+              <tr>
+                <td>21</td>
+                <td>Brazilian GP</td>
+                <td>06.11 - 08.11</td>
+              </tr>
+              <tr>
+                <td>22</td>
+                <td>Las Vegas GP</td>
+                <td>19.11 - 21.11</td>
+              </tr>
+              <tr>
+                <td>23</td>
+                <td>Qatar GP</td>
+                <td>27.11 - 29.11</td>
+              </tr>
+              <tr>
+                <td>24</td>
+                <td>Abu Dhabi GP</td>
+                <td>04.12 - 06.12</td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="widget">
+            <h3>🔗 F1 Links</h3>
+            <ul>
+              <li>
+                <a href="https://www.formula1.com" target="_blank"
+                  >F1 Official</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.fia.com/events/fia-formula-one-world-championship/season-2026/2026-fia-formula-one-world-championship"
+                  target="_blank"
+                  >FIA Official</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div class="widget">
+            <h3>📊 Stats</h3>
+            <p><strong>Visitors:</strong> 456,789</p>
+            <p><strong>Online Now:</strong> 128</p>
+            <p><strong>Race Reports:</strong> 234</p>
+          </div>
+        </aside>
+      </div>
+
+      <footer>
+        <p>&copy; 2026 raweceek.eu</p>
+        <p>
+          Best viewed in Internet Explorer 6.0 or Netscape Navigator 7.0 at
+          1024x768 resolution
+        </p>
+      </footer>
+    </div>
+  </body>
 </html>

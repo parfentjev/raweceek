@@ -1,0 +1,90 @@
+<!doctype html>
+<html
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}"
+>
+  <body>
+    <div layout:fragment="content">
+      <article th:if="${isRaceWeek}">
+        <h2>🎉 RAWE CEEK IS HERE!!! 🎉</h2>
+        <p class="post-meta">Posted on January 26, 2026 by RaceAdmin</p>
+        <p>
+          OMG OMG OMG!!! Fellow F1 fanatics, the wait is OVER! This week we're
+          getting our fix of high-speed racing action and it feels SO GOOD! 🏎️💨
+        </p>
+        <p>
+          The paddock is ALIVE with activity! Mechanics are bolting on fresh
+          tires, engineers are hunched over laptops making those final setup
+          tweaks, and drivers are walking the track getting their heads in the
+          zone. You can practically smell the racing fuel and hear the engines
+          warming up from here!
+        </p>
+        <p>
+          Team transporters have rolled into the circuit, hospitality units are
+          serving up coffee by the gallon, and the media center is buzzing with
+          journalists hunting for the latest scoop. This is what we LIVE for,
+          people!
+        </p>
+        <p>
+          Grab your snacks, clear your schedule, and get ready for some serious
+          track time because
+          <strong>IT'S RAWE CEEK BABY!!!</strong>
+        </p>
+        <p><strong>The countdown clock shows:</strong></p>
+        <ul th:each="countdown, iter : ${nextSession.countdowns}">
+          <li th:class="'color-' + ${iter.index}" th:text="${countdown.value}">
+            Countdown
+          </li>
+        </ul>
+        <p>
+          Until the engines fire up for 🏎️
+          <strong
+            >FORMULA 1 QATAR AIRWAYS AUSTRALIAN GRAND PRIX 2026 - Practice
+            1</strong
+          >
+          begins!
+        </p>
+        <p>
+          Time to dust off those team jerseys and prepare for an epic weekend of
+          racing! See you in the race thread! 🏁
+        </p>
+      </article>
+
+      <article th:unless="${isRaceWeek}">
+        <h2>No racing this week... *sigh*</h2>
+        <p class="post-meta">Posted on January 26, 2026 by RaceAdmin</p>
+        <p>
+          Sad news for all us F1 junkies out there... This is NOT a race week. I
+          know, I know, it hurts us too. 😭
+        </p>
+        <p>
+          The off-week blues have hit hard, and the paddock is silent. No
+          screaming engines, no smoking tires, no late-night setup changes.
+          Just... emptiness.
+        </p>
+        <p>
+          <strong
+            >But don't despair! The paddock rumors tell us there's only:</strong
+          >
+        </p>
+        <ul th:each="countdown, iter : ${nextSession.countdowns}">
+          <li th:class="'color-' + ${iter.index}" th:text="${countdown.value}">
+            Countdown
+          </li>
+        </ul>
+        <p>
+          Until we can finally watch 🏎️
+          <strong
+            >FORMULA 1 QATAR AIRWAYS AUSTRALIAN GRAND PRIX 2026 - Practice
+            1</strong
+          >
+          and get our racing fix!
+        </p>
+        <p>
+          Hang in there, F1 fam! We'll get through this together. Maybe go watch
+          some classic races on YouTube to ease the pain? 🏁💔
+        </p>
+      </article>
+    </div>
+  </body>
+</html>
