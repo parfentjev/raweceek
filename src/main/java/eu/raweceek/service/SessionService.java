@@ -1,5 +1,8 @@
 package eu.raweceek.service;
 
+import eu.raweceek.codegen.model.CountdownDto;
+import eu.raweceek.codegen.model.SessionDto;
+import eu.raweceek.repository.SessionRepository;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.temporal.WeekFields;
@@ -7,9 +10,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-import eu.raweceek.codegen.model.CountdownDto;
-import eu.raweceek.codegen.model.SessionDto;
-import eu.raweceek.repository.SessionRepository;
 
 @Service
 public class SessionService {
@@ -92,7 +92,7 @@ public class SessionService {
   }
 
   private CountdownDto calculateCeeks(long remainingTime) {
-    var result = String.format("%.2f ceeks", remainingTime / SECONDS_IN_WEEK);
+    var result = String.format("%.3f ceeks", remainingTime / SECONDS_IN_WEEK);
 
     return new CountdownDto().type(CountdownDto.TypeEnum.CEEKS).value(result);
   }
