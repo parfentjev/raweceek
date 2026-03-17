@@ -7,7 +7,12 @@
     <div layout:fragment="content">
       <article th:if="${isRaceWeek}">
         <h2>🎉 RAWE CEEK IS HERE!!! 🎉</h2>
-        <p class="post-meta">Posted on January 26, 2026 by RaceAdmin</p>
+        <p
+          class="post-meta"
+          th:text="${#temporals.format(#temporals.createNow(), 'MMMM dd, yyyy')}"
+        >
+          Date
+        </p>
         <p>
           OMG OMG OMG!!! Fellow F1 fanatics, the wait is OVER! This week we're
           getting our fix of high-speed racing action and it feels SO GOOD! 🏎️💨
@@ -31,8 +36,11 @@
           <strong>IT'S RAWE CEEK BABY!!!</strong>
         </p>
         <p><strong>The countdown clock shows:</strong></p>
-        <ul th:each="countdown, iter : ${nextSession.countdowns}">
-          <li th:class="'color-' + ${iter.index}" th:text="${countdown.value}">
+        <ul>
+          <li
+            th:each="countdown, iter : ${nextSession.countdowns}"
+            th:text="${countdown.value}"
+          >
             Countdown
           </li>
         </ul>
@@ -49,7 +57,12 @@
 
       <article th:unless="${isRaceWeek}">
         <h2>No racing this week... *sigh*</h2>
-        <p class="post-meta">Posted on January 26, 2026 by RaceAdmin</p>
+        <p
+          class="post-meta"
+          th:text="${#temporals.format(#temporals.createNow(), 'MMMM dd, yyyy')}"
+        >
+          Date
+        </p>
         <p>
           Sad news for all us F1 junkies out there... This is NOT a race week. I
           know, I know, it hurts us too. 😭
@@ -64,8 +77,11 @@
             >But don't despair! The paddock rumors tell us there's only:</strong
           >
         </p>
-        <ul th:each="countdown, iter : ${nextSession.countdowns}">
-          <li th:class="'color-' + ${iter.index}" th:text="${countdown.value}">
+        <ul>
+          <li
+            th:each="countdown, iter : ${nextSession.countdowns}"
+            th:text="${countdown.value}"
+          >
             Countdown
           </li>
         </ul>
