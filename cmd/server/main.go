@@ -1,40 +1,31 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
-	"net/url"
-	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/parfentjev/raweceek/internal/codegen/db"
 	"github.com/parfentjev/raweceek/internal/session"
 )
 
 func main() {
-	router := gin.Default()
-
-	postgresUrl := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
-		os.Getenv("DATABASE_USER"),
-		url.QueryEscape(os.Getenv("DATABASE_PASSWORD")),
-		os.Getenv("DATABASE_HOST"),
-		os.Getenv("DATABASE_PORT"),
-		os.Getenv("DATABASE_NAME"),
-		os.Getenv("DATABASE_SSL"),
-	)
-
-	dbPool, err := pgxpool.New(context.Background(), postgresUrl)
+	config, err := loadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer dbPool.Close()
 
-	queries := db.New(dbPool)
+	pool, err := newPool(config.Database)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer pool.Close()
+
+	queries := db.New(pool)
 	repository := session.NewRepository(queries)
 	service := session.NewService(repository)
 
+	router := gin.Default()
 	router.GET("/", func(ctx *gin.Context) {
 		session, err := service.GetNextSession(ctx.Request.Context())
 		if err != nil {

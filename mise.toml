@@ -6,7 +6,7 @@ sqlc = "latest"
 _.file = ".env"
 
 [tasks.start]
-run = "go run ."
+run = "go run ./cmd/server/"
 
 [tasks.codegen]
 run = """
