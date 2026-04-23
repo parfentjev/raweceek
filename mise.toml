@@ -6,16 +6,20 @@ golangci-lint = "latest"
 [env]
 _.file = ".env"
 
-[tasks.start]
+[tasks."start"]
 run = "go run ./cmd/server/"
 
-[tasks.codegen]
+[tasks."codegen"]
 run = """
 rm -rf internal/codegen/
 sqlc generate -f spec/codegen/sqlc.yaml
 """
 description = "Generate code from database and api specs"
 
-[tasks.lint]
+[tasks."lint"]
 run = "golangci-lint run"
 description = "Run linter"
+
+[tasks."lint:fix"]
+run = "golangci-lint run --fix"
+description = "Fix lint errors"
