@@ -2,13 +2,21 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/parfentjev/raweceek/internal/codegen/db"
 	"github.com/parfentjev/raweceek/internal/session"
 )
 
 func main() {
+	if err := run(); err != nil {
+		log.Fatalln(err)
+	}
+}
+
+func run() error {
 	config, err := loadConfig()
 	if err != nil {
 		log.Fatal(err)
@@ -30,14 +38,12 @@ func main() {
 		session, err := service.GetNextSession(ctx.Request.Context())
 		if err != nil {
 			log.Println(err)
-			ctx.Status(500)
+			ctx.Status(http.StatusInternalServerError)
 			return
 		}
 
-		ctx.String(200, session.Summary)
+		ctx.String(http.StatusOK, session.Summary)
 	})
 
-	if err := router.Run(); err != nil {
-		log.Fatalf("failed to run server: %v", err)
-	}
+	return router.Run()
 }
