@@ -1,3 +1,16 @@
 [tools]
-go = 'latest'
-sqlc = 'latest'
+go = "latest"
+sqlc = "latest"
+
+[env]
+_.file = ".env"
+
+[tasks.start]
+run = "go run ."
+
+[tasks.codegen]
+run = """
+rm -rf internal/codegen/
+sqlc generate -f spec/codegen/sqlc.yaml
+"""
+description = "Generate code from database and api specs"
