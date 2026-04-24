@@ -2,11 +2,11 @@ package main
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/parfentjev/raweceek/internal/codegen/db"
+	"github.com/parfentjev/raweceek/internal/handlers"
 	"github.com/parfentjev/raweceek/internal/session"
 )
 
@@ -19,12 +19,12 @@ func main() {
 func run() error {
 	config, err := loadConfig()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	pool, err := newPool(config.Database)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	defer pool.Close()
@@ -34,16 +34,7 @@ func run() error {
 	service := session.NewService(repository)
 
 	router := gin.Default()
-	router.GET("/", func(ctx *gin.Context) {
-		session, err := service.GetNextSession(ctx.Request.Context())
-		if err != nil {
-			log.Println(err)
-			ctx.Status(http.StatusInternalServerError)
-			return
-		}
-
-		ctx.String(http.StatusOK, session.Summary)
-	})
+	handlers.RegisterRoutes(service, router)
 
 	return router.Run()
 }

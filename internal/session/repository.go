@@ -17,3 +17,7 @@ func NewRepository(queries *db.Queries) *Repository {
 func (r *Repository) GetNextSession(ctx context.Context) (db.Session, error) {
 	return r.queries.GetNextSession(ctx)
 }
+
+func (r *Repository) CountSessionsThisWeek(ctx context.Context) (int64, error) {
+	return r.queries.CountSessionsThisWeek(ctx)
+}
