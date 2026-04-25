@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,22 +19,22 @@ func newHandler(service *session.Service) *Handler {
 	return &Handler{service}
 }
 
-func (h *Handler) index(ctx *gin.Context) {
-	nextSession, err := h.service.GetNextSession(ctx.Request.Context())
+func (handler *Handler) index(ctx *gin.Context) {
+	nextSession, err := handler.service.GetNextSession(ctx.Request.Context())
 	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
+		_ = ctx.Error(fmt.Errorf("failed to query next session: %w", err))
 		return
 	}
 
 	sessionJSON, err := json.Marshal(nextSession)
 	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
+		_ = ctx.Error(fmt.Errorf("failed to convert next session to JSON: %w", err))
 		return
 	}
 
-	isRaceWeek, err := h.service.IsRaceWeek(ctx.Request.Context())
+	isRaceWeek, err := handler.service.IsRaceWeek(ctx.Request.Context())
 	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
+		_ = ctx.Error(fmt.Errorf("failed to determine race week status: %w", err))
 		return
 	}
 
@@ -41,12 +43,26 @@ func (h *Handler) index(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "index.html", data)
 }
 
-func (h *Handler) nextSession(ctx *gin.Context) {
-	session, err := h.service.GetNextSession(ctx.Request.Context())
+func (handler *Handler) nextSession(ctx *gin.Context) {
+	session, err := handler.service.GetNextSession(ctx.Request.Context())
 	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
+		_ = ctx.Error(fmt.Errorf("failed to query next session: %w", err))
 		return
 	}
 
 	ctx.JSON(http.StatusOK, session)
+}
+
+// https://gin-gonic.com/en/docs/middleware/error-handling-middleware/
+func errorHandler(logger *slog.Logger) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		ctx.Next()
+
+		if len(ctx.Errors) > 0 {
+			err := ctx.Errors.Last().Err
+			logger.Error("failed to process request", slog.Any("err", err))
+
+			ctx.Status(http.StatusInternalServerError)
+		}
+	}
 }

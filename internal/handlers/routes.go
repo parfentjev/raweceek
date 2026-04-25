@@ -1,16 +1,27 @@
 package handlers
 
 import (
+	"log/slog"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/parfentjev/raweceek/internal/session"
 )
 
-func RegisterRoutes(service *session.Service, router *gin.Engine) {
-	h := newHandler(service)
+type Router struct {
+	service *session.Service
+	gin     *gin.Engine
+	logger  *slog.Logger
+}
 
-	router.LoadHTMLGlob("public/templates/*.html")
-	router.Static("/static", "public/static/")
-	router.GET("/", h.index)
-	router.GET("/api/next-session", h.nextSession)
+func NewRouter(service *session.Service, router *gin.Engine, logger *slog.Logger) *Router {
+	return &Router{service, router, logger}
+}
+
+func (router *Router) RegisterRoutes() {
+	router.gin.Use(errorHandler(router.logger))
+
+	handler := newHandler(router.service)
+	router.gin.GET("/", handler.index)
+	router.gin.GET("/api/next-session", handler.nextSession)
 }

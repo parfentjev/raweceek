@@ -1,13 +1,13 @@
 [tools]
-go = "latest"
-sqlc = "latest"
-golangci-lint = "latest"
+go = "1.26.2"
+sqlc = "1.31.1"
+golangci-lint = "2.11.4"
 
 [env]
 _.file = ".env"
 
 [tasks."start"]
-run = "go run ./cmd/server/"
+run = "go run ."
 
 [tasks."codegen"]
 run = """

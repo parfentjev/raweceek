@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"github.com/caarlos0/env/v11"
@@ -17,7 +17,7 @@ type DatabaseConfig struct {
 	SSL      string `env:"SSL,required"`
 }
 
-func loadConfig() (Config, error) {
+func LoadConfig() (Config, error) {
 	config := Config{}
 
 	return config, env.Parse(&config)
