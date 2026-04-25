@@ -16,4 +16,4 @@ secrets:
   databaseSsl: ""
 
 ingress:
-  host: "91.99.213.33"
+  host: "raweceek.eu"

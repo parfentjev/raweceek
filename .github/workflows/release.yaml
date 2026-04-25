@@ -8,6 +8,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
       packages: write
@@ -29,19 +30,19 @@ jobs:
           platforms: linux/arm64
           tags: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
           push: true
-      - name: Set up WireGuard
-        run: |
-          sudo apt install -y wireguard
-          echo "${{ secrets.WG_CONFIG }}" | sudo tee /etc/wireguard/wg0.conf
-          sudo wg-quick up wg0
       - name: Set up kubectl
         uses: azure/setup-kubectl@v5
-      - name: Set up helm
-        uses: azure/setup-helm@v5
       - name: Set up kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+      - name: Set up helm
+        uses: azure/setup-helm@v5
+      - name: Set up network
+        run: |
+          sudo apt install -y wireguard
+          echo "${{ secrets.WG_CONFIG }}" | sudo tee /etc/wireguard/wg0.conf
+          sudo wg-quick up wg0
       - name: Deploy
         run: |
           helm upgrade --install raweceek ./helm \

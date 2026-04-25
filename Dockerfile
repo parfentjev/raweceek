@@ -3,7 +3,7 @@ WORKDIR /app/src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN go build -v -o /app/out/raweceek .
+RUN go build -o /app/out/raweceek .
 
 FROM alpine:3.23.4 AS release
 COPY --from=builder /app/out/raweceek /usr/local/bin/raweceek
