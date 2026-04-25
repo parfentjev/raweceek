@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          env:
+            - name: DATABASE_USER
+              value: {{ .Values.secrets.databaseUser | quote }}
+            - name: DATABASE_PASSWORD
+              value: {{ .Values.secrets.databasePassword | quote }}
+            - name: DATABASE_HOST
+              value: {{ .Values.secrets.databaseHost | quote }}
+            - name: DATABASE_PORT
+              value: {{ .Values.secrets.databasePort | quote }}
+            - name: DATABASE_NAME
+              value: {{ .Values.secrets.databaseName | quote }}
+            - name: DATABASE_SSL
+              value: {{ .Values.secrets.databaseSsl | quote }}

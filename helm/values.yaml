@@ -1,0 +1,19 @@
+image:
+  repository: ghcr.io/parfentjev/raweceek
+
+replicaCount: 1
+
+service:
+  port: 80
+  targetPort: 8080
+
+secrets:
+  databaseUser: ""
+  databasePassword: ""
+  databaseHost: ""
+  databasePort: ""
+  databaseName: ""
+  databaseSsl: ""
+
+ingress:
+  host: "91.99.213.33"
