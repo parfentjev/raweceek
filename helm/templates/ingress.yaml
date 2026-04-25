@@ -2,7 +2,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: { ? { .Release.Name } }
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
 spec:
   ingressClassName: traefik
   rules:
@@ -13,6 +14,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: { ? { .Release.Name } }
+                name: {{ .Release.Name }}
                 port:
-                  number: { ? { .Values.service.port } }
+                  number: {{ .Values.service.port }}

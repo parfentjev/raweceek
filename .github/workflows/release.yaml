@@ -1,4 +1,4 @@
-name: Deploy
+name: release
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - "v*"
 
 jobs:
-  release:
+  build-and-deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -46,6 +46,8 @@ jobs:
       - name: Deploy
         run: |
           helm upgrade --install raweceek ./helm \
+            --namespace raweceek \
+            --create-namespace \
             --set image.tag="${{ github.ref_name }}" \
             --set-string secrets.databaseUser="${{ secrets.DATABASE_USER }}" \
             --set-string secrets.databasePassword="${{ secrets.DATABASE_PASSWORD }}" \
