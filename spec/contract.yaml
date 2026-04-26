@@ -19,12 +19,12 @@ paths:
       tags:
         - Session
       responses:
-        '200':
+        "200":
           description: Next session found and returned successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SessionDto'
+                $ref: "#/components/schemas/SessionDto"
               example:
                 summary: "🏎 HEINEKEN DUTCH GRAND PRIX 2025 - Practice 1"
                 location: "Netherlands"
@@ -35,9 +35,9 @@ paths:
                     value: "0.10 ceeks"
                   - type: "TIME_UNTIL"
                     value: "17 hours 32 minutes and 12 seconds"
-        '404':
+        "404":
           description: No upcoming session found
-        '500':
+        "500":
           description: Internal server error
 
 components:
@@ -72,7 +72,7 @@ components:
           type: array
           description: Set of countdown timers for the session
           items:
-            $ref: '#/components/schemas/CountdownDto'
+            $ref: "#/components/schemas/CountdownDto"
           uniqueItems: true
 
     CountdownDto:

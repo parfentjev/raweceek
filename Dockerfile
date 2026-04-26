@@ -1,12 +1,10 @@
-FROM maven:3.9.11-amazoncorretto-25-alpine AS build
+FROM golang:1.26.2-alpine AS builder
+WORKDIR /app/src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN go build -o /app/out/raweceek .
 
-WORKDIR /build
-COPY pom.xml pom.xml
-COPY src src
-COPY spec spec
-RUN mvn clean package -ntp -q
-
-FROM maven:3.9.11-amazoncorretto-25-alpine
-WORKDIR /release
-COPY --from=build /build/target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+FROM alpine:3.23.4 AS release
+COPY --from=builder /app/out/raweceek /usr/local/bin/raweceek
+CMD ["raweceek"]

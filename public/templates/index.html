@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Rawe Ceek - Is it a race week?</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Welcome to RaweCeek - the totally tubular F1 Race Week countdown! Here you can discover when the next Grand Prix session blasts off - it's awesome!?"
+    />
+    <link rel="icon" href="/static/favicon.ico" />
+    <link rel="stylesheet" href="/static/css/main.css" />
+  </head>
+
+  <body>
+    <main>
+      <p><img src="/static/img/welcome.gif" /></p>
+      <div class="menu">
+        <a
+          href="http://users4.smartgb.com/g/g.php?a=s&i=g44-82594-15"
+          target="_blank"
+        >
+          <img src="/static/img/guest-book.gif" alt="Guest book" />
+        </a>
+        <a href="https://www.formula1.com/en/racing/2026" target="_blank">
+          <img src="/static/img/calendar.gif" alt="Racing calendar" />
+        </a>
+        <a
+          href="https://github.com/parfentjev/raweceek/blob/master/spec/contract.yaml"
+          target="_blank"
+        >
+          <img src="/static/img/api.gif" alt="API specification" />
+        </a>
+      </div>
+      <p>
+        <img
+          src="/static/img/under-construction.gif"
+          alt="Under construction sign"
+        />
+      </p>
+      {{if .isRaceWeek}}
+      <marquee direction="right" behavior="alternate" scrollamount="25">
+        <h1>
+          <span class="color-0">T</span>
+          <span class="color-1">H</span>
+          <span class="color-2">I</span>
+          <span class="color-3">S</span>
+          <span> </span>
+          <span class="color-4">W</span>
+          <span class="color-5">E</span>
+          <span class="color-6">E</span>
+          <span class="color-0">K</span>
+          <span> </span>
+          <span class="color-1">I</span>
+          <span class="color-2">S</span>
+          <span> </span>
+          <span class="color-3">A</span>
+          <span> </span>
+          <span class="color-4">R</span>
+          <span class="color-5">A</span>
+          <span class="color-6">C</span>
+          <span class="color-0">E</span>
+          <span> </span>
+          <span class="color-1">W</span>
+          <span class="color-2">E</span><span class="color-3">E</span>
+          <span class="color-4">K</span>
+        </h1>
+      </marquee>
+      {{else}}
+      <p>This week is not a race week :(</p>
+      {{end}}
+      <p>"How long should <i>I</i> wait until the next session???" Only...</p>
+      <ul class="countdowns">
+        {{range .session.Countdowns}}
+        <li>{{.Value}}</li>
+        {{end}}
+      </ul>
+      <p class="extra-margin">
+        <img src="/static/img/checkered-flag.gif" />
+        <img src="/static/img/racecar.gif" />
+        <img src="/static/img/checkered-flag.gif" />
+      </p>
+      <p>'But how do you know that???' you might ask.</p>
+      <p class="extra-margin"><img src="/static/img/super-easy.gif" /></p>
+      <p>I say! Thanks to this majestic...</p>
+      <p class="extra-margin"><img src="/static/img/rest-api-service.gif" /></p>
+      <p>
+        I only need to make one request to know when is the next racing session!
+      </p>
+      <p class="extra-margin"><img src="/static/img/is-that-curl.gif" /></p>
+      <p>YES, <span class="accent">IT IS!!!</span></p>
+      <p id="api-specification">$ curl https://raweceek.eu/api/next-session</p>
+      <code>{{.sessionJSON}}</code>
+      <p><img src="/static/img/under-construction.gif" /></p>
+      <div class="buttons">
+        <p>
+          <img src="/static/img/buttons/100hot.gif" />
+          <img src="/static/img/buttons/abinow.gif" />
+          <img src="/static/img/buttons/acrobat.gif" />
+          <img src="/static/img/buttons/aimlink.gif" />
+          <img src="/static/img/buttons/amazing_free_stuff.gif" />
+        </p>
+        <p>
+          <img src="/static/img/buttons/adv_rar2.gif" />
+          <img src="/static/img/buttons/classicgaming.gif" />
+          <img src="/static/img/buttons/divx.gif" />
+          <img src="/static/img/buttons/free-webhosts.gif" />
+          <img src="/static/img/buttons/gc_icon.gif" />
+        </p>
+        <p>
+          <img src="/static/img/buttons/get_java.gif" />
+          <img src="/static/img/buttons/google_25wht.gif" />
+          <img src="/static/img/buttons/hatemac.jpg" />
+          <img src="/static/img/buttons/hotmail.gif" />
+          <img src="/static/img/buttons/html.gif" />
+        </p>
+        <p>
+          <img src="/static/img/buttons/linux_powered.gif" />
+          <img src="/static/img/buttons/microsoft_frontpage.gif" />
+          <img src="/static/img/buttons/mircnow.gif" />
+          <img src="/static/img/buttons/mp3button.gif" />
+          <img src="/static/img/buttons/mysql5.gif" />
+        </p>
+        <p>
+          <img src="/static/img/buttons/shbutton.gif" />
+          <img src="/static/img/buttons/stockobjects.gif" />
+          <img src="/static/img/buttons/top50w.gif" />
+          <img src="/static/img/buttons/winfiles.gif" />
+          <img src="/static/img/buttons/winzip.gif" />
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

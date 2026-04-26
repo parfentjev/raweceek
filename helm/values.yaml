@@ -1,0 +1,14 @@
+image:
+  repository: ghcr.io/parfentjev/raweceek
+
+deployment:
+  replicaCount: 1
+  strategy: RollingUpdate
+  secretRef: raweceek-secrets
+
+service:
+  port: 80
+  targetPort: 8080
+
+ingress:
+  host: "raweceek.eu"

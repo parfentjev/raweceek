@@ -1,0 +1,27 @@
+[tools]
+go = "1.26.2"
+sqlc = "1.31.1"
+golangci-lint = "2.11.4"
+helm = "4.1.4"
+sops = "3.12.2"
+
+[env]
+_.file = ".env"
+
+[tasks."start"]
+run = "go run ."
+
+[tasks."codegen"]
+run = """
+rm -rf internal/codegen/
+sqlc generate -f spec/codegen/sqlc.yaml
+"""
+description = "Generate code from database and api specs"
+
+[tasks."lint"]
+run = "golangci-lint run"
+description = "Run linter"
+
+[tasks."lint:fix"]
+run = "golangci-lint run --fix"
+description = "Fix lint errors"

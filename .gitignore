@@ -1,5 +1,2 @@
-.vscode/
+helm/secrets.yaml
 .env
-target/
-notes.md
-pom.xml.versionsBackup
