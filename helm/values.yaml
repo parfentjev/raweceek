@@ -7,13 +7,5 @@ service:
   port: 80
   targetPort: 8080
 
-secrets:
-  databaseUser: ""
-  databasePassword: ""
-  databaseHost: ""
-  databasePort: ""
-  databaseName: ""
-  databaseSsl: ""
-
 ingress:
   host: "raweceek.eu"

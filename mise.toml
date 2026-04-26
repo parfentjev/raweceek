@@ -3,6 +3,7 @@ go = "1.26.2"
 sqlc = "1.31.1"
 golangci-lint = "2.11.4"
 helm = "4.1.4"
+sops = "3.12.2"
 
 [env]
 _.file = ".env"

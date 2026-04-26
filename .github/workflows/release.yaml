@@ -30,13 +30,13 @@ jobs:
           platforms: linux/arm64
           tags: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
           push: true
-      - name: Set up kubectl
+      - name: Install kubectl
         uses: azure/setup-kubectl@v5
       - name: Set up kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-      - name: Set up helm
+      - name: Install helm
         uses: azure/setup-helm@v5
       - name: Set up network
         run: |
@@ -49,10 +49,4 @@ jobs:
             --namespace raweceek \
             --create-namespace \
             --set image.tag="${{ github.ref_name }}" \
-            --set-string secrets.databaseUser="${{ secrets.DATABASE_USER }}" \
-            --set-string secrets.databasePassword="${{ secrets.DATABASE_PASSWORD }}" \
-            --set-string secrets.databaseHost="${{ secrets.DATABASE_HOST }}" \
-            --set-string secrets.databasePort="${{ secrets.DATABASE_PORT }}" \
-            --set-string secrets.databaseName="${{ secrets.DATABASE_NAME }}" \
-            --set-string secrets.databaseSsl="${{ secrets.DATABASE_SSL }}" \
             -f helm/values.yaml
