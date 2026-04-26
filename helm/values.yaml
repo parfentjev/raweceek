@@ -1,7 +1,10 @@
 image:
   repository: ghcr.io/parfentjev/raweceek
 
-replicaCount: 1
+deployment:
+  replicaCount: 1
+  strategy: RollingUpdate
+  secretRef: raweceek-secrets
 
 service:
   port: 80

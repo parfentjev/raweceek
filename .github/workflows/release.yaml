@@ -45,7 +45,7 @@ jobs:
           sudo wg-quick up wg0
       - name: Deploy
         run: |
-          helm upgrade --install raweceek ./helm \
+          helm upgrade --install service ./helm \
             --namespace raweceek \
             --create-namespace \
             --set image.tag="${{ github.ref_name }}" \

@@ -4,7 +4,9 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.deployment.replicaCount }}
+  strategy:
+    type: {{ .Values.deployment.strategy }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
@@ -22,4 +24,4 @@ spec:
             - containerPort: {{ .Values.service.targetPort }}
           envFrom:
             - secretRef:
-                name: raweceek-secrets
+                name: {{ .Values.deployment.secretRef }}
