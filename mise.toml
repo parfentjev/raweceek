@@ -10,6 +10,11 @@ _.file = ".env"
 
 [tasks."start"]
 run = "go run ."
+description = "Launch the service"
+
+[tasks."test"]
+run = "go test ./..."
+description = "Execute unit tests"
 
 [tasks."codegen"]
 run = """
