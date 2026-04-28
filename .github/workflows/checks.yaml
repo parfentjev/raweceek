@@ -11,3 +11,11 @@ jobs:
       - uses: jdx/mise-action@v4
       - name: lint
         run: mise lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: jdx/mise-action@v4
+      - name: test
+        run: mise test

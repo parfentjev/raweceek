@@ -3,6 +3,7 @@ package session
 import (
 	"context"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -26,6 +27,7 @@ type Countdown struct {
 }
 
 const secondsInWeek = 7 * 24 * 60 * 60
+const minCeeksValue = 0.001
 
 func NewService(repository *Repository) *Service {
 	return &Service{repository}
@@ -108,7 +110,8 @@ func appendTimeUnit(sb *strings.Builder, value int64, name, end string) {
 }
 
 func calculateCeeks(remainingTime int64) Countdown {
-	value := fmt.Sprintf("%.3f ceeks", float64(remainingTime)/secondsInWeek)
+	ceeks := math.Max(float64(remainingTime)/secondsInWeek, minCeeksValue)
+	value := fmt.Sprintf("%.3f ceeks", ceeks)
 
 	return Countdown{Type: "CEEKS", Value: value}
 }
