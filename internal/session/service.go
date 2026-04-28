@@ -71,10 +71,11 @@ func calculateTimeUntil(remainingTime int64) Countdown {
 	seconds := remainingTime % 60
 	minutes := (remainingTime / 60) % 60
 	hours := (remainingTime / (60 * 60)) % 24
-	days := (remainingTime / (60 * 60 * 24)) % 7
 	totalDays := remainingTime / (60 * 60 * 24)
 	months := totalDays / 30
-	weeks := (totalDays % 30) / 7
+	remainingDays := totalDays % 30
+	weeks := remainingDays / 7
+	days := remainingDays % 7
 
 	type unit struct {
 		value int64
