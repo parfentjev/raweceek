@@ -37,7 +37,7 @@ impl CountdownDto {
         let hours = (remaining_time / (60 * 60)) % 24;
 
         // This part isn't very precise because not all months are exactly 30 days long,
-        // But this is acceptable level of precision.
+        // But this level of precision is acceptable.
         let total_days = remaining_time / (60 * 60 * 24);
         let months = total_days / 30;
 

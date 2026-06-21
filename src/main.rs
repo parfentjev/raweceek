@@ -29,7 +29,7 @@ async fn run() -> Result<()> {
     let database_url = env::var("DATABASE_URL")?;
     let db = PgPool::connect(&database_url)
         .await
-        .map_err(|e| anyhow!("pg_pool connect: {e}"))?;
+        .map_err(|e| anyhow!("pg_pool: {e}"))?;
 
     let state = AppState { db };
     let app = Router::new()
@@ -44,7 +44,7 @@ async fn run() -> Result<()> {
 
     axum::serve(listener, app)
         .await
-        .map_err(|e| anyhow!("axum serve: {e}"))?;
+        .map_err(|e| anyhow!("axum: {e}"))?;
 
     Ok(())
 }
