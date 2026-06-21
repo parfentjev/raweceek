@@ -11,13 +11,40 @@ servers:
     description: Development server
 
 paths:
+  /api/status:
+    get:
+      summary: Get race week status
+      description: Retrieves whether the current week is a race week and details for the next upcoming session
+      operationId: getStatus
+      responses:
+        '200':
+          description: Race week status and next session returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusDto'
+              example:
+                raceWeek: true
+                nextSession:
+                  summary: "🏎 HEINEKEN DUTCH GRAND PRIX 2025 - Practice 1"
+                  location: "Netherlands"
+                  startTime: "2025-08-29T10:30:00Z"
+                  thisWeek: true
+                  countdowns:
+                    - type: "CEEKS"
+                      value: "0.10 ceeks"
+                    - type: "TIME_UNTIL"
+                      value: "17 hours, 32 minutes, 12 seconds"
+        '404':
+          description: No upcoming session found
+        '500':
+          description: Internal server error
+
   /api/next-session:
     get:
       summary: Get next session
       description: Retrieves the next upcoming session with details
       operationId: getNextSession
-      tags:
-        - Session
       responses:
         '200':
           description: Next session found and returned successfully
@@ -34,7 +61,7 @@ paths:
                   - type: "CEEKS"
                     value: "0.10 ceeks"
                   - type: "TIME_UNTIL"
-                    value: "17 hours 32 minutes and 12 seconds"
+                    value: "17 hours, 32 minutes, 12 seconds"
         '404':
           description: No upcoming session found
         '500':
@@ -42,6 +69,19 @@ paths:
 
 components:
   schemas:
+    StatusDto:
+      type: object
+      required:
+        - raceWeek
+        - nextSession
+      properties:
+        raceWeek:
+          type: boolean
+          description: Indicates whether the current week contains at least one session
+          example: true
+        nextSession:
+          $ref: '#/components/schemas/SessionDto'
+
     SessionDto:
       type: object
       required:
@@ -92,6 +132,3 @@ components:
           type: string
           description: The countdown value as a formatted string
           example: "0.10 ceeks"
-
-tags:
-  - name: NextSession
