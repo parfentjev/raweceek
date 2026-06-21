@@ -4,8 +4,11 @@ mod session;
 
 use std::{env, process};
 
-use anyhow::Result;
-use axum::{Router, routing};
+use anyhow::{Result, anyhow};
+use axum::{
+    Router,
+    routing::{self},
+};
 use sqlx::PgPool;
 use tokio::net::TcpListener;
 
@@ -24,7 +27,9 @@ async fn main() {
 
 async fn run() -> Result<()> {
     let database_url = env::var("DATABASE_URL")?;
-    let db = PgPool::connect(&database_url).await?;
+    let db = PgPool::connect(&database_url)
+        .await
+        .map_err(|e| anyhow!("pg_pool connect: {e}"))?;
 
     let state = AppState { db };
     let app = Router::new()
@@ -33,8 +38,13 @@ async fn run() -> Result<()> {
         .fallback_service(handler::fallback())
         .with_state(state);
 
-    let listener = TcpListener::bind("0.0.0.0:8080").await?;
-    axum::serve(listener, app).await?;
+    let listener = TcpListener::bind("0.0.0.0:8080")
+        .await
+        .map_err(|e| anyhow!("tcp_listener: {e}"))?;
+
+    axum::serve(listener, app)
+        .await
+        .map_err(|e| anyhow!("axum serve: {e}"))?;
 
     Ok(())
 }

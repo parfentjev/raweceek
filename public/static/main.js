@@ -29,7 +29,7 @@ const run = () => {
       return response.json();
     }).then((data) => {
       if (!data || data.raceWeek === undefined || !data.nextSession || !data.nextSession.countdowns) {
-        throw Error('Oi, mate. The bloody service returned some garbage. I can't work with that, mate.');
+        throw Error('Oi, mate. The bloody service returned some garbage. I can\'t work with that, mate.');
       }
 
       const raceWeekBlockId = data.raceWeek ? "race-week" : "not-race-week";
