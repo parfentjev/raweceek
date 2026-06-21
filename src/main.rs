@@ -17,7 +17,7 @@ pub struct AppState {
 #[tokio::main]
 async fn main() {
     if let Err(e) = run().await {
-        eprintln!("program failed: {}", e);
+        eprintln!("service failed: {}", e);
         process::exit(1);
     };
 }

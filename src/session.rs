@@ -51,7 +51,7 @@ impl From<Session> for SessionDto {
     }
 }
 
-pub async fn sessions_this_week(db: &PgPool) -> Result<i64> {
+pub async fn count_this_week(db: &PgPool) -> Result<i64> {
     let count = sqlx::query_scalar(
         "select count(*) from sessions where start_time >= date_trunc('week', now()) and start_time < date_trunc('week', now()) + interval '1 week';",
     ).fetch_one(db).await?;

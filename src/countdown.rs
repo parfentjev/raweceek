@@ -35,10 +35,12 @@ impl CountdownDto {
         let seconds = (remaining_time) % 60;
         let minutes = (remaining_time / 60) % 60;
         let hours = (remaining_time / (60 * 60)) % 24;
+
         // This part isn't very precise because not all months are exactly 30 days long,
         // But this is acceptable level of precision.
         let total_days = remaining_time / (60 * 60 * 24);
         let months = total_days / 30;
+
         let remaining_days = total_days % 30;
         let weeks = remaining_days / 7;
         let days = remaining_days % 7;
@@ -54,13 +56,12 @@ impl CountdownDto {
         ];
 
         for (value, unit) in value_unit_map.iter() {
-            // Skip zero-values like '0 seconds' from the final value.
+            // Don't add zero-values like '0 seconds' to the output.
             if *value < 1 {
                 continue;
             }
 
-            // If there is already some text in the output,
-            // It means we should add a separator.
+            // If there is already some text in the output, add a separator.
             if !time_until.is_empty() {
                 write!(&mut time_until, ", ")?;
             }
@@ -82,9 +83,9 @@ impl CountdownDto {
     fn append_unit(out: &mut String, value: &i64, unit: &str) -> Result<()> {
         write!(out, "{value} {unit}")?;
 
-        // Append 's' to values greater than 1, e.g.
-        // 1 second
-        // 2 seconds
+        // Append 's' to values greater than 1, e.g.:
+        // - 1 second
+        // - 2 seconds
         if *value > 1 {
             write!(out, "s")?;
         }

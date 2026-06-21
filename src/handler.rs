@@ -52,7 +52,7 @@ pub struct StatusDto {
 
 /// GET /api/status
 pub async fn status(State(state): State<AppState>) -> ResponseBody<Json<StatusDto>> {
-    let race_week = session::sessions_this_week(&state.db).await? > 0;
+    let race_week = session::count_this_week(&state.db).await? > 0;
     let next_session = session::find_next(&state.db).await?;
 
     Ok(Json(StatusDto {
