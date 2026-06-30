@@ -1,47 +1,8 @@
-use anyhow::Result;
-use axum::{
-    Json,
-    extract::State,
-    http::StatusCode,
-    response::{IntoResponse, Response},
-};
+use axum::{Json, extract::State};
 use serde::Serialize;
 use tower_http::services::ServeDir;
 
-use crate::{
-    AppState,
-    session::{self, SessionDto},
-};
-
-pub struct HandlerError {
-    error: anyhow::Error,
-}
-
-impl HandlerError {
-    fn status_code(&self) -> StatusCode {
-        match self.error.downcast_ref::<sqlx::Error>() {
-            Some(sqlx::Error::RowNotFound) => StatusCode::NOT_FOUND,
-            _ => StatusCode::INTERNAL_SERVER_ERROR,
-        }
-    }
-}
-
-pub type ResponseBody<T> = Result<T, HandlerError>;
-
-impl<E: Into<anyhow::Error>> From<E> for HandlerError {
-    fn from(value: E) -> Self {
-        Self {
-            error: value.into(),
-        }
-    }
-}
-
-impl IntoResponse for HandlerError {
-    fn into_response(self) -> Response {
-        eprintln!("handler error: {}", self.error);
-        self.status_code().into_response()
-    }
-}
+use crate::{AppState, error::AppError, session, session::SessionDto};
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -51,7 +12,7 @@ pub struct StatusDto {
 }
 
 /// GET /api/status
-pub async fn status(State(state): State<AppState>) -> ResponseBody<Json<StatusDto>> {
+pub async fn status(State(state): State<AppState>) -> Result<Json<StatusDto>, AppError> {
     let race_week = session::count_this_week(&state.db).await? > 0;
     let next_session = session::find_next(&state.db).await?;
 
@@ -62,7 +23,7 @@ pub async fn status(State(state): State<AppState>) -> ResponseBody<Json<StatusDt
 }
 
 /// GET /api/next-session
-pub async fn next_session(State(state): State<AppState>) -> ResponseBody<Json<SessionDto>> {
+pub async fn next_session(State(state): State<AppState>) -> Result<Json<SessionDto>, AppError> {
     let session = session::find_next(&state.db).await?;
 
     Ok(Json(session))

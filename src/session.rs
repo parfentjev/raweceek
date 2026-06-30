@@ -1,9 +1,27 @@
-use anyhow::Result;
 use serde::Serialize;
 use sqlx::{PgPool, prelude::FromRow, types::time::OffsetDateTime};
 use time::UtcOffset;
 
-use crate::countdown::CountdownDto;
+use crate::countdown::{self, CountdownDto};
+
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("next session not found")]
+    NotFound,
+    #[error("database error: {0}")]
+    Database(#[source] sqlx::Error),
+    #[error("countdown error: {0}")]
+    Countdown(#[from] countdown::Error),
+}
+
+impl From<sqlx::Error> for Error {
+    fn from(value: sqlx::Error) -> Self {
+        match value {
+            sqlx::Error::RowNotFound => Self::NotFound,
+            error => Self::Database(error),
+        }
+    }
+}
 
 #[derive(FromRow)]
 struct Session {
@@ -24,34 +42,26 @@ pub struct SessionDto {
     pub countdowns: Vec<CountdownDto>,
 }
 
-impl From<Session> for SessionDto {
-    fn from(session: Session) -> Self {
+impl SessionDto {
+    fn from_session(session: Session) -> Result<Self, Error> {
         let current_time = OffsetDateTime::now_utc();
         let session_time = session.start_time.to_offset(UtcOffset::UTC);
-
         let remaining_time = session_time - current_time;
-        let ceeks = CountdownDto::ceeks(&remaining_time);
-        let time_until = CountdownDto::time_until(&remaining_time);
 
-        let countdowns = match time_until {
-            Ok(time_until) => vec![ceeks, time_until],
-            Err(e) => {
-                eprintln!("time_until failed: {e}");
-                vec![ceeks]
-            }
-        };
-
-        Self {
+        Ok(Self {
             summary: session.summary,
             location: session.location,
             start_time: session_time,
             this_week: session.this_week,
-            countdowns,
-        }
+            countdowns: vec![
+                CountdownDto::ceeks(&remaining_time),
+                CountdownDto::time_until(&remaining_time)?,
+            ],
+        })
     }
 }
 
-pub async fn count_this_week(db: &PgPool) -> Result<i64> {
+pub async fn count_this_week(db: &PgPool) -> Result<i64, Error> {
     let count = sqlx::query_scalar(
         "select count(*) from sessions where start_time >= date_trunc('week', now()) and start_time < date_trunc('week', now()) + interval '1 week'",
     ).fetch_one(db).await?;
@@ -59,12 +69,12 @@ pub async fn count_this_week(db: &PgPool) -> Result<i64> {
     Ok(count)
 }
 
-pub async fn find_next(db: &PgPool) -> Result<SessionDto> {
+pub async fn find_next(db: &PgPool) -> Result<SessionDto, Error> {
     let session = sqlx::query_as::<_, Session>(
         "select summary, location, start_time, start_time >= date_trunc('week', now()) and start_time < date_trunc('week', now()) + interval '1 week' as this_week from sessions where start_time > now() order by start_time limit 1"
     )
     .fetch_one(db)
     .await?;
 
-    Ok(session.into())
+    SessionDto::from_session(session)
 }

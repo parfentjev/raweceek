@@ -1,9 +1,16 @@
-use anyhow::Result;
+use std::fmt;
+
 use serde::Serialize;
 use std::fmt::Write;
 use time::Duration;
 
 const SECONDS_PER_WEEK: f64 = 604_800.0;
+
+#[derive(thiserror::Error, Debug)]
+pub enum Error {
+    #[error("time_until: failed to write to String: {0}")]
+    WriteError(#[from] fmt::Error),
+}
 
 #[derive(Serialize)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
@@ -29,7 +36,7 @@ impl CountdownDto {
         }
     }
 
-    pub fn time_until(remaining_time: &Duration) -> Result<Self> {
+    pub fn time_until(remaining_time: &Duration) -> Result<Self, Error> {
         let remaining_time = remaining_time.whole_seconds();
 
         let seconds = (remaining_time) % 60;
@@ -80,7 +87,7 @@ impl CountdownDto {
         })
     }
 
-    fn append_unit(out: &mut String, value: &i64, unit: &str) -> Result<()> {
+    fn append_unit(out: &mut String, value: &i64, unit: &str) -> Result<(), Error> {
         write!(out, "{value} {unit}")?;
 
         // Append 's' to values greater than 1, e.g.:
