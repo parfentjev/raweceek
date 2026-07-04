@@ -1,0 +1,19 @@
+# Podman Systemd Unit
+# /home/user/.config/containers/systemd/raweceek.container
+[Unit]
+Description=RaweCeek.eu service
+After=network-online.target
+
+[Container]
+Image=localhost/raweceek:latest
+PublishPort=127.0.0.1:8080:8080
+PublishPort=127.0.0.1:8081:8081
+NoNewPrivileges=true
+EnvironmentFile=%h/raweceek.env
+
+[Service]
+Restart=always
+TimeoutStartSec=60
+
+[Install]
+WantedBy=default.target

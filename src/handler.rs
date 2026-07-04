@@ -1,6 +1,6 @@
 use axum::{Json, extract::State};
 use serde::Serialize;
-use tower_http::services::ServeDir;
+use tower_http::services::{ServeDir, ServeFile};
 
 use crate::{AppState, error::AppError, session, session::SessionDto};
 
@@ -29,7 +29,11 @@ pub async fn next_session(State(state): State<AppState>) -> Result<Json<SessionD
     Ok(Json(session))
 }
 
-/// Fallback for any other request (static files)
+/// Handlers for static files
+pub fn index() -> ServeFile {
+    ServeFile::new("public/index.html")
+}
+
 pub fn fallback() -> ServeDir {
     ServeDir::new("public")
 }
