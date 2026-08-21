@@ -1,3 +1,6 @@
+-include .env
+export
+
 .PHONY: fmt lint build
 
 fmt:
@@ -5,9 +8,3 @@ fmt:
 
 lint:
 	cargo clippy --all
-
-build:
-	podman build -t raweceek:latest .
-	rm raweceek.tar
-	podman save -o raweceek.tar raweceek:latest
-
