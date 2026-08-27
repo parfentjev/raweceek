@@ -55,10 +55,6 @@ async fn run_app_server() -> Result<(), Error> {
         .route("/api/status", routing::get(handler::status))
         .route("/api/next-session", routing::get(handler::next_session))
         .route("/api/v2/status", routing::get(handler::status_v2))
-        .route(
-            "/api/v2/next-session",
-            routing::get(handler::next_session_v2),
-        )
         .route_layer(axum::middleware::from_fn(metrics::track_metrics))
         .fallback_service(handler::fallback())
         .with_state(state);

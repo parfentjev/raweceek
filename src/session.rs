@@ -37,7 +37,6 @@ struct SessionV2 {
     location: String,
     start_time: OffsetDateTime,
     this_week: bool,
-    started: bool,
 }
 
 #[derive(Serialize)]
@@ -77,7 +76,6 @@ pub struct SessionDtoV2 {
     pub location: String,
     #[serde(with = "time::serde::rfc3339")]
     pub start_time: OffsetDateTime,
-    pub started: bool,
     pub this_week: bool,
     pub countdowns: Vec<CountdownDto>,
 }
@@ -95,7 +93,6 @@ impl TryFrom<SessionV2> for SessionDtoV2 {
             location: session.location,
             start_time: session_time,
             this_week: session.this_week,
-            started: session.started,
             countdowns: vec![
                 CountdownDto::ceeks(&remaining_time),
                 CountdownDto::time_until(&remaining_time)?,
@@ -124,38 +121,13 @@ pub async fn find_next(db: &PgPool) -> Result<SessionDto, Error> {
     SessionDto::from_session(session)
 }
 
-pub async fn find_next_session_v2(db: &PgPool) -> Result<SessionDtoV2, Error> {
-    let query = r#"
-    select
-        s.summary,
-        s.location,
-        s.start_time,
-        s.start_time >= date_trunc('week', now() at time zone 'UTC') at time zone 'UTC'
-        and s.start_time < date_trunc('week', now() at time zone 'UTC') at time zone 'UTC'
-            + interval '1 week' as this_week,
-        s.start_time < now() as started
-    from
-        sessions s
-    where
-        s.start_time > now()
-    order by
-        s.start_time asc
-    limit 1
-    "#;
-
-    sqlx::query_as::<_, SessionV2>(query)
-        .fetch_one(db)
-        .await?
-        .try_into()
-}
-
-/// Finds all sessions in the UTC week that contains the next upcoming session. A successful result always contains at least one session.
+/// Finds upcoming sessions in the UTC week that contains the next upcoming session. A successful result always contains at least one session.
 ///
 /// # Errors
 ///
 /// Returns [`Error::NotFound`] if there are no upcoming sessions. It also returns
 /// an error if the database query or session conversion fails.
-pub async fn find_next_v2(db: &PgPool) -> Result<Vec<SessionDtoV2>, Error> {
+pub async fn find_upcoming(db: &PgPool) -> Result<Vec<SessionDtoV2>, Error> {
     let query = r#"
     with next_week as (
     select
@@ -172,13 +144,12 @@ pub async fn find_next_v2(db: &PgPool) -> Result<Vec<SessionDtoV2>, Error> {
         s.summary,
         s.location,
         s.start_time,
-        n.week_start = date_trunc('week', now() at time zone 'UTC') at time zone 'UTC' as this_week,
-        s.start_time < now() as started
+        n.week_start = date_trunc('week', now() at time zone 'UTC') at time zone 'UTC' as this_week
     from
         sessions s
     cross join next_week n
     where
-        1 = 1
+        s.start_time > now()
         and s.start_time >= n.week_start
         and s.start_time < n.week_start + interval '1 week'
     order by

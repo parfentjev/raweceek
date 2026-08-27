@@ -49,7 +49,9 @@ paths:
   /api/v2/status:
     get:
       summary: Get race week status
-      description: Retrieves the sessions from the next race weekend and identifies the next session
+      description: >
+        Retrieves the upcoming sessions from the next race weekend in start-time
+        order. The first session is the next session.
       operationId: getStatusV2
       responses:
         "200":
@@ -60,27 +62,15 @@ paths:
                 $ref: "#/components/schemas/StatusDtoV2"
               example:
                 upcoming_sessions:
-                  - summary: "🏎 HEINEKEN DUTCH GRAND PRIX 2025 - Practice 1"
-                    location: "Netherlands"
-                    start_time: "2025-08-29T10:30:00Z"
-                    started: true
-                    this_week: true
-                    countdowns:
-                      - type: "CEEKS"
-                        value: "0.001 ceeks"
-                      - type: "TIME_UNTIL"
-                        value: "0s"
                   - summary: "🏎 HEINEKEN DUTCH GRAND PRIX 2025 - Practice 2"
                     location: "Netherlands"
                     start_time: "2025-08-29T14:00:00Z"
-                    started: false
                     this_week: true
                     countdowns:
                       - type: "CEEKS"
                         value: "0.010 ceeks"
                       - type: "TIME_UNTIL"
                         value: "1 hour"
-                next_session_index: 1
                 race_week: true
         "404":
           description: No upcoming session found
@@ -92,8 +82,8 @@ paths:
       summary: Get next session
       description: >
         Retrieves the next upcoming session with details. Deprecated. Use
-        /api/v2/next-session. This operation will be removed on January 1, 2027,
-        or earlier if metrics show that clients do not use it.
+        the first session in /api/v2/status. This operation will be removed on
+        January 1, 2027, or earlier if metrics show that clients do not use it.
       operationId: getNextSession
       deprecated: true
       x-removal-date: "2027-01-01"
@@ -109,34 +99,6 @@ paths:
                 location: "Netherlands"
                 startTime: "2025-08-29T10:30:00Z"
                 thisWeek: true
-                countdowns:
-                  - type: "CEEKS"
-                    value: "0.10 ceeks"
-                  - type: "TIME_UNTIL"
-                    value: "17 hours, 32 minutes, 12 seconds"
-        "404":
-          description: No upcoming session found
-        "500":
-          description: Internal server error
-
-  /api/v2/next-session:
-    get:
-      summary: Get next session
-      description: Retrieves the next upcoming session with V2 details
-      operationId: getNextSessionV2
-      responses:
-        "200":
-          description: Next session found and returned successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SessionDtoV2"
-              example:
-                summary: "🏎 HEINEKEN DUTCH GRAND PRIX 2025 - Practice 1"
-                location: "Netherlands"
-                start_time: "2025-08-29T10:30:00Z"
-                started: false
-                this_week: true
                 countdowns:
                   - type: "CEEKS"
                     value: "0.10 ceeks"
@@ -199,20 +161,14 @@ components:
       type: object
       required:
         - upcoming_sessions
-        - next_session_index
         - race_week
       properties:
         upcoming_sessions:
           type: array
-          description: Sessions from the race weekend that contains the next upcoming session
+          description: Upcoming sessions in start-time order from the race weekend that contains the next session
           minItems: 1
           items:
             $ref: "#/components/schemas/SessionDtoV2"
-        next_session_index:
-          type: integer
-          minimum: 0
-          description: Index of the next session in upcoming_sessions
-          example: 1
         race_week:
           type: boolean
           description: Indicates whether the returned race weekend is in the current UTC week
@@ -224,7 +180,6 @@ components:
         - summary
         - location
         - start_time
-        - started
         - this_week
         - countdowns
       properties:
@@ -241,10 +196,6 @@ components:
           format: date-time
           description: The start date and time of the session in ISO 8601 format (UTC)
           example: "2025-08-29T10:30:00Z"
-        started:
-          type: boolean
-          description: Indicates whether the session has started
-          example: false
         this_week:
           type: boolean
           description: Indicates whether the returned race weekend is in the current UTC week
