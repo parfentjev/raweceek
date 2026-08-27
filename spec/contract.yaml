@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Raweceek API
-  version: 1.1.0
+  version: 2.0.0
   contact:
     url: https://raweceek.eu
 servers:
@@ -14,15 +14,21 @@ paths:
   /api/status:
     get:
       summary: Get race week status
-      description: Retrieves whether the current week is a race week and details for the next upcoming session
+      description: >
+        Retrieves whether the current week is a race week and details for the next
+        upcoming session. Deprecated. Use /api/v2/status. This operation will be
+        removed on January 1, 2027, or earlier if metrics show that clients do not
+        use it.
       operationId: getStatus
+      deprecated: true
+      x-removal-date: "2027-01-01"
       responses:
-        '200':
+        "200":
           description: Race week status and next session returned successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatusDto'
+                $ref: "#/components/schemas/StatusDto"
               example:
                 raceWeek: true
                 nextSession:
@@ -35,23 +41,59 @@ paths:
                       value: "0.10 ceeks"
                     - type: "TIME_UNTIL"
                       value: "17 hours, 32 minutes, 12 seconds"
-        '404':
+        "404":
           description: No upcoming session found
-        '500':
+        "500":
+          description: Internal server error
+
+  /api/v2/status:
+    get:
+      summary: Get race week status
+      description: >
+        Retrieves the upcoming sessions from the next race weekend in start-time
+        order. The first session is the next session.
+      operationId: getStatusV2
+      responses:
+        "200":
+          description: Race week status and upcoming sessions returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusDtoV2"
+              example:
+                upcoming_sessions:
+                  - summary: "🏎 HEINEKEN DUTCH GRAND PRIX 2025 - Practice 2"
+                    location: "Netherlands"
+                    start_time: "2025-08-29T14:00:00Z"
+                    this_week: true
+                    countdowns:
+                      - type: "CEEKS"
+                        value: "0.010 ceeks"
+                      - type: "TIME_UNTIL"
+                        value: "1 hour"
+                race_week: true
+        "404":
+          description: No upcoming session found
+        "500":
           description: Internal server error
 
   /api/next-session:
     get:
       summary: Get next session
-      description: Retrieves the next upcoming session with details
+      description: >
+        Retrieves the next upcoming session with details. Deprecated. Use
+        the first session in /api/v2/status. This operation will be removed on
+        January 1, 2027, or earlier if metrics show that clients do not use it.
       operationId: getNextSession
+      deprecated: true
+      x-removal-date: "2027-01-01"
       responses:
-        '200':
+        "200":
           description: Next session found and returned successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SessionDto'
+                $ref: "#/components/schemas/SessionDto"
               example:
                 summary: "🏎 HEINEKEN DUTCH GRAND PRIX 2025 - Practice 1"
                 location: "Netherlands"
@@ -62,9 +104,9 @@ paths:
                     value: "0.10 ceeks"
                   - type: "TIME_UNTIL"
                     value: "17 hours, 32 minutes, 12 seconds"
-        '404':
+        "404":
           description: No upcoming session found
-        '500':
+        "500":
           description: Internal server error
 
 components:
@@ -80,7 +122,7 @@ components:
           description: Indicates whether the current week contains at least one session
           example: true
         nextSession:
-          $ref: '#/components/schemas/SessionDto'
+          $ref: "#/components/schemas/SessionDto"
 
     SessionDto:
       type: object
@@ -112,7 +154,57 @@ components:
           type: array
           description: Set of countdown timers for the session
           items:
-            $ref: '#/components/schemas/CountdownDto'
+            $ref: "#/components/schemas/CountdownDto"
+          uniqueItems: true
+
+    StatusDtoV2:
+      type: object
+      required:
+        - upcoming_sessions
+        - race_week
+      properties:
+        upcoming_sessions:
+          type: array
+          description: Upcoming sessions in start-time order from the race weekend that contains the next session
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/SessionDtoV2"
+        race_week:
+          type: boolean
+          description: Indicates whether the returned race weekend is in the current UTC week
+          example: true
+
+    SessionDtoV2:
+      type: object
+      required:
+        - summary
+        - location
+        - start_time
+        - this_week
+        - countdowns
+      properties:
+        summary:
+          type: string
+          description: Brief summary or title of the session/race
+          example: "🏎 HEINEKEN DUTCH GRAND PRIX 2025 - Practice 1"
+        location:
+          type: string
+          description: Country or location where the event takes place
+          example: "Netherlands"
+        start_time:
+          type: string
+          format: date-time
+          description: The start date and time of the session in ISO 8601 format (UTC)
+          example: "2025-08-29T10:30:00Z"
+        this_week:
+          type: boolean
+          description: Indicates whether the returned race weekend is in the current UTC week
+          example: true
+        countdowns:
+          type: array
+          description: Set of countdown timers for the session
+          items:
+            $ref: "#/components/schemas/CountdownDto"
           uniqueItems: true
 
     CountdownDto:
