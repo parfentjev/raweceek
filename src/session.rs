@@ -31,6 +31,15 @@ struct Session {
     this_week: bool,
 }
 
+#[derive(FromRow)]
+struct SessionV2 {
+    summary: String,
+    location: String,
+    start_time: OffsetDateTime,
+    this_week: bool,
+    started: bool,
+}
+
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionDto {
@@ -61,20 +70,131 @@ impl SessionDto {
     }
 }
 
+#[derive(Serialize)]
+#[serde(rename_all = "snake_case")]
+pub struct SessionDtoV2 {
+    pub summary: String,
+    pub location: String,
+    #[serde(with = "time::serde::rfc3339")]
+    pub start_time: OffsetDateTime,
+    pub started: bool,
+    pub this_week: bool,
+    pub countdowns: Vec<CountdownDto>,
+}
+
+impl TryFrom<SessionV2> for SessionDtoV2 {
+    type Error = Error;
+
+    fn try_from(session: SessionV2) -> Result<Self, Self::Error> {
+        let current_time = OffsetDateTime::now_utc();
+        let session_time = session.start_time.to_offset(UtcOffset::UTC);
+        let remaining_time = session_time - current_time;
+
+        Ok(Self {
+            summary: session.summary,
+            location: session.location,
+            start_time: session_time,
+            this_week: session.this_week,
+            started: session.started,
+            countdowns: vec![
+                CountdownDto::ceeks(&remaining_time),
+                CountdownDto::time_until(&remaining_time)?,
+            ],
+        })
+    }
+}
+
 pub async fn count_this_week(db: &PgPool) -> Result<i64, Error> {
     let count = sqlx::query_scalar(
         "select count(*) from sessions where start_time >= date_trunc('week', now()) and start_time < date_trunc('week', now()) + interval '1 week'",
-    ).fetch_one(db).await?;
+    )
+    .fetch_one(db)
+    .await?;
 
     Ok(count)
 }
 
 pub async fn find_next(db: &PgPool) -> Result<SessionDto, Error> {
     let session = sqlx::query_as::<_, Session>(
-        "select summary, location, start_time, start_time >= date_trunc('week', now()) and start_time < date_trunc('week', now()) + interval '1 week' as this_week from sessions where start_time > now() order by start_time limit 1"
+        "select summary, location, start_time, start_time >= date_trunc('week', now()) and start_time < date_trunc('week', now()) + interval '1 week' as this_week from sessions where start_time > now() order by start_time limit 1",
     )
     .fetch_one(db)
     .await?;
 
     SessionDto::from_session(session)
+}
+
+pub async fn find_next_session_v2(db: &PgPool) -> Result<SessionDtoV2, Error> {
+    let query = r#"
+    select
+        s.summary,
+        s.location,
+        s.start_time,
+        s.start_time >= date_trunc('week', now() at time zone 'UTC') at time zone 'UTC'
+        and s.start_time < date_trunc('week', now() at time zone 'UTC') at time zone 'UTC'
+            + interval '1 week' as this_week,
+        s.start_time < now() as started
+    from
+        sessions s
+    where
+        s.start_time > now()
+    order by
+        s.start_time asc
+    limit 1
+    "#;
+
+    sqlx::query_as::<_, SessionV2>(query)
+        .fetch_one(db)
+        .await?
+        .try_into()
+}
+
+/// Finds all sessions in the UTC week that contains the next upcoming session. A successful result always contains at least one session.
+///
+/// # Errors
+///
+/// Returns [`Error::NotFound`] if there are no upcoming sessions. It also returns
+/// an error if the database query or session conversion fails.
+pub async fn find_next_v2(db: &PgPool) -> Result<Vec<SessionDtoV2>, Error> {
+    let query = r#"
+    with next_week as (
+    select
+        date_trunc('week', start_time at time zone 'UTC') at time zone 'UTC' as week_start
+    from
+        sessions
+    where
+        start_time > now()
+    order by
+        start_time asc
+    limit 1
+    )
+    select
+        s.summary,
+        s.location,
+        s.start_time,
+        n.week_start = date_trunc('week', now() at time zone 'UTC') at time zone 'UTC' as this_week,
+        s.start_time < now() as started
+    from
+        sessions s
+    cross join next_week n
+    where
+        1 = 1
+        and s.start_time >= n.week_start
+        and s.start_time < n.week_start + interval '1 week'
+    order by
+        s.start_time asc;
+    "#;
+
+    let sessions = sqlx::query_as::<_, SessionV2>(query)
+        .fetch_all(db)
+        .await?
+        .into_iter()
+        .map(SessionV2::try_into)
+        .collect::<Result<Vec<_>, _>>()?;
+
+    if sessions.is_empty() {
+        return Err(Error::NotFound);
+    }
+
+    Ok(sessions)
 }
