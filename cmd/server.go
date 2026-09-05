@@ -13,6 +13,7 @@ import (
 	"github.com/parfentjev/raweceek/internal/generated/api"
 	"github.com/parfentjev/raweceek/internal/generated/db"
 	"github.com/parfentjev/raweceek/internal/handler"
+	"github.com/parfentjev/raweceek/internal/schedule"
 )
 
 const ReadHeaderTimeout = 5 * time.Second
@@ -41,7 +42,9 @@ func run(logger *slog.Logger) error {
 	}
 
 	queries := db.New(pool)
-	apiHandler := handler.NewAPIHandler(logger, queries)
+	service := schedule.New(logger, queries)
+
+	apiHandler := handler.NewAPIHandler(logger, service)
 	staticHandler, err := handler.NewStaticHandler()
 	if err != nil {
 		return err

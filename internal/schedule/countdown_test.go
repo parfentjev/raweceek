@@ -1,13 +1,16 @@
-package handler
+package schedule_test
 
 import (
 	"testing"
 	"time"
 
 	"github.com/parfentjev/raweceek/internal/generated/api"
+	"github.com/parfentjev/raweceek/internal/schedule"
 )
 
-func TestNewCeeksCountdown(t *testing.T) {
+func TestCeeksCountdown(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name          string
 		remainingTime time.Duration
@@ -42,7 +45,10 @@ func TestNewCeeksCountdown(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			countdown := NewCeeksCountdown(tt.remainingTime)
+			t.Parallel()
+
+			time := schedule.NewRemainingTime(tt.remainingTime)
+			countdown := time.Ceeks()
 
 			if countdown.Type != api.CEEKS {
 				t.Errorf("NewCeeks() type = %q, want %q", countdown.Type, api.CEEKS)
@@ -55,7 +61,9 @@ func TestNewCeeksCountdown(t *testing.T) {
 	}
 }
 
-func TestNewTimeUntilCountdown(t *testing.T) {
+func TestTimeUntilCountdown(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name          string
 		remainingTime time.Duration
@@ -102,7 +110,10 @@ func TestNewTimeUntilCountdown(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			countdown := NewTimeUntilCountdown(tt.remainingTime)
+			t.Parallel()
+
+			time := schedule.NewRemainingTime(tt.remainingTime)
+			countdown := time.TimeUntil()
 
 			if countdown.Type != api.TIMEUNTIL {
 				t.Errorf("NewTimeUntil() type = %q, want %q", countdown.Type, api.TIMEUNTIL)

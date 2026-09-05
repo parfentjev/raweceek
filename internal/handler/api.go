@@ -4,19 +4,17 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
-	"time"
 
-	"github.com/parfentjev/raweceek/internal/generated/api"
-	"github.com/parfentjev/raweceek/internal/generated/db"
+	"github.com/parfentjev/raweceek/internal/schedule"
 )
 
 type APIHandler struct {
 	logger  *slog.Logger
-	queries *db.Queries
+	service schedule.Service
 }
 
-func NewAPIHandler(logger *slog.Logger, queries *db.Queries) APIHandler {
-	return APIHandler{logger, queries}
+func NewAPIHandler(logger *slog.Logger, service schedule.Service) APIHandler {
+	return APIHandler{logger, service}
 }
 
 func (s *APIHandler) GetNextSession(_ http.ResponseWriter, _ *http.Request) {}
@@ -24,32 +22,14 @@ func (s *APIHandler) GetNextSession(_ http.ResponseWriter, _ *http.Request) {}
 func (s *APIHandler) GetStatus(_ http.ResponseWriter, _ *http.Request) {}
 
 func (s *APIHandler) GetStatusV2(w http.ResponseWriter, r *http.Request) {
-	upcomingSessions, err := s.queries.FindUpcoming(r.Context())
+	status, err := s.service.GetStatusV2(r.Context())
 	if err != nil {
-		s.logger.ErrorContext(r.Context(), "failed query upcoming sessions", slog.Any("error", err))
+		s.logger.ErrorContext(r.Context(), "failed to get status", slog.Any("error", err))
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
 
-	remainingTime := upcomingSessions[0].StartTime.Time.UTC().Sub(time.Now().UTC())
-
-	response := api.StatusDtoV2{
-		RaceWeek: upcomingSessions[0].ThisWeek,
-		UpcomingSessions: []api.SessionDtoV2{
-			{
-				Countdowns: []api.CountdownDto{
-					NewCeeksCountdown(remainingTime),
-					NewTimeUntilCountdown(remainingTime),
-				},
-				Location:  upcomingSessions[0].Location,
-				StartTime: upcomingSessions[0].StartTime.Time.UTC(),
-				Summary:   upcomingSessions[0].Summary,
-				ThisWeek:  upcomingSessions[0].ThisWeek,
-			},
-		},
-	}
-
-	body, err := json.Marshal(response)
+	body, err := json.Marshal(status)
 	if err != nil {
 		s.logger.ErrorContext(r.Context(), "failed to encode response body", slog.Any("error", err))
 		http.Error(w, "internal server error", http.StatusInternalServerError)
