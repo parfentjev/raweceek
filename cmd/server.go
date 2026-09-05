@@ -55,7 +55,7 @@ func run(logger *slog.Logger) error {
 	api.HandlerFromMux(&apiHandler, mux)
 
 	server := &http.Server{
-		Addr:              "127.0.0.1:8080",
+		Addr:              cfg.BindAddress,
 		Handler:           mux,
 		ReadHeaderTimeout: ReadHeaderTimeout,
 	}
