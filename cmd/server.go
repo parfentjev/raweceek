@@ -1,12 +1,17 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/parfentjev/raweceek/internal/config"
 	"github.com/parfentjev/raweceek/internal/generated/api"
+	"github.com/parfentjev/raweceek/internal/generated/db"
 	"github.com/parfentjev/raweceek/internal/handler"
 )
 
@@ -20,7 +25,23 @@ func main() {
 }
 
 func run(logger *slog.Logger) error {
-	apiHandler := handler.NewAPIHandler(logger)
+	cfg, err := config.New()
+	if err != nil {
+		return err
+	}
+
+	pgxpoolArgs := fmt.Sprintf("host=%v dbname=%v user=%v password=%v",
+		cfg.DatabaseHost,
+		cfg.DatabaseName,
+		cfg.DatabaseUser,
+		cfg.DatabasePassword)
+	pool, err := pgxpool.New(context.Background(), pgxpoolArgs)
+	if err != nil {
+		return err
+	}
+
+	queries := db.New(pool)
+	apiHandler := handler.NewAPIHandler(logger, queries)
 	staticHandler, err := handler.NewStaticHandler()
 	if err != nil {
 		return err

@@ -7,14 +7,16 @@ import (
 	"time"
 
 	"github.com/parfentjev/raweceek/internal/generated/api"
+	"github.com/parfentjev/raweceek/internal/generated/db"
 )
 
 type APIHandler struct {
-	logger *slog.Logger
+	logger  *slog.Logger
+	queries *db.Queries
 }
 
-func NewAPIHandler(logger *slog.Logger) APIHandler {
-	return APIHandler{logger}
+func NewAPIHandler(logger *slog.Logger, queries *db.Queries) APIHandler {
+	return APIHandler{logger, queries}
 }
 
 func (s *APIHandler) GetNextSession(_ http.ResponseWriter, _ *http.Request) {}
@@ -22,18 +24,27 @@ func (s *APIHandler) GetNextSession(_ http.ResponseWriter, _ *http.Request) {}
 func (s *APIHandler) GetStatus(_ http.ResponseWriter, _ *http.Request) {}
 
 func (s *APIHandler) GetStatusV2(w http.ResponseWriter, r *http.Request) {
+	upcomingSessions, err := s.queries.FindUpcoming(r.Context())
+	if err != nil {
+		s.logger.ErrorContext(r.Context(), "failed query upcoming sessions", slog.Any("error", err))
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	remainingTime := upcomingSessions[0].StartTime.Time.UTC().Sub(time.Now().UTC())
+
 	response := api.StatusDtoV2{
-		RaceWeek: true,
+		RaceWeek: upcomingSessions[0].ThisWeek,
 		UpcomingSessions: []api.SessionDtoV2{
 			{
 				Countdowns: []api.CountdownDto{
-					{Value: "0.123", Type: api.CEEKS},
-					{Value: "1 day 23 hours and 69 minutes", Type: api.TIMEUNTIL},
+					NewCeeksCountdown(remainingTime),
+					NewTimeUntilCountdown(remainingTime),
 				},
-				Location:  "Estonia",
-				StartTime: time.Now(),
-				Summary:   "GRAND PRIX OF LASNAMÄE",
-				ThisWeek:  true,
+				Location:  upcomingSessions[0].Location,
+				StartTime: upcomingSessions[0].StartTime.Time.UTC(),
+				Summary:   upcomingSessions[0].Summary,
+				ThisWeek:  upcomingSessions[0].ThisWeek,
 			},
 		},
 	}
