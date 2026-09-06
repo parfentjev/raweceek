@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"net/url"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -18,6 +21,7 @@ import (
 )
 
 const (
+	ShutdownTimeout         = 5 * time.Second
 	DatabasePingTimeout     = 2 * time.Second
 	ServerReadHeaderTimeout = 2 * time.Second
 	ServerReadTimeout       = 5 * time.Second
@@ -52,7 +56,7 @@ func run(logger *slog.Logger) error {
 		return fmt.Errorf("failed to create http server: %w", err)
 	}
 
-	return server.ListenAndServe()
+	return startServer(logger, server)
 }
 
 func dbPool(cfg config.Database) (*pgxpool.Pool, error) {
@@ -98,4 +102,44 @@ func httpServer(logger *slog.Logger, cfg config.Server, service schedule.Service
 		WriteTimeout:      ServerWriteTimeout,
 		IdleTimeout:       ServerIdleTimeout,
 	}, nil
+}
+
+func startServer(logger *slog.Logger, server *http.Server) error {
+	signalContext, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	serverError := make(chan error, 1)
+	go func() {
+		serverError <- server.ListenAndServe()
+	}()
+
+	logger.Info("ready to handle requests", slog.String("address", server.Addr))
+
+	var shutdownError error
+	select {
+	case shutdownError = <-serverError:
+		// Server exited voluntarily, nothing to do here.
+	case <-signalContext.Done():
+		logger.Info("shutting down")
+		stop()
+
+		shutdownContext, cancelShutdown := context.WithTimeout(context.Background(), ShutdownTimeout)
+		defer cancelShutdown()
+
+		if err := server.Shutdown(shutdownContext); err != nil {
+			return fmt.Errorf("failed to shutdown server: %w", err)
+		}
+
+		shutdownError = <-serverError
+	}
+
+	if shutdownError != nil {
+		if errors.Is(shutdownError, http.ErrServerClosed) {
+			return nil
+		}
+
+		return fmt.Errorf("fatal server error: %w", shutdownError)
+	}
+
+	return nil
 }
