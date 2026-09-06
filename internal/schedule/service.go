@@ -2,13 +2,17 @@ package schedule
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/parfentjev/raweceek/internal/generated/api"
 	"github.com/parfentjev/raweceek/internal/generated/db"
 )
+
+var ErrSessionNotFound = errors.New("next session(s) not found")
 
 type Service struct {
 	logger  *slog.Logger
@@ -22,6 +26,10 @@ func New(logger *slog.Logger, queries *db.Queries) Service {
 func (s *Service) GetNextSession(ctx context.Context) (api.SessionDto, error) {
 	session, err := s.queries.FindNext(ctx)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return api.SessionDto{}, ErrSessionNotFound
+		}
+
 		return api.SessionDto{}, err
 	}
 
@@ -41,6 +49,10 @@ func (s *Service) GetNextSession(ctx context.Context) (api.SessionDto, error) {
 func (s *Service) GetStatus(ctx context.Context) (api.StatusDto, error) {
 	session, err := s.queries.FindNext(ctx)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return api.StatusDto{}, ErrSessionNotFound
+		}
+
 		return api.StatusDto{}, err
 	}
 
@@ -66,6 +78,10 @@ func (s *Service) GetStatusV2(ctx context.Context) (api.StatusDtoV2, error) {
 		return api.StatusDtoV2{}, fmt.Errorf("failed to query database: %w", err)
 	}
 
+	if len(upcomingSessions) == 0 {
+		return api.StatusDtoV2{}, ErrSessionNotFound
+	}
+
 	return api.StatusDtoV2{
 		RaceWeek:         upcomingSessions[0].ThisWeek,
 		UpcomingSessions: mapRowsToSessions(upcomingSessions),
@@ -74,9 +90,9 @@ func (s *Service) GetStatusV2(ctx context.Context) (api.StatusDtoV2, error) {
 
 func mapRowsToSessions(rows []db.FindUpcomingRow) []api.SessionDtoV2 {
 	sessions := make([]api.SessionDtoV2, 0, len(rows))
-	remainingTime := startToRemainingTime(rows[0].StartTime.Time)
-
 	for _, row := range rows {
+		remainingTime := startToRemainingTime(row.StartTime.Time)
+
 		sessions = append(sessions, api.SessionDtoV2{
 			Countdowns: []api.CountdownDto{
 				remainingTime.Ceeks(),
