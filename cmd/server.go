@@ -31,34 +31,46 @@ func run(logger *slog.Logger) error {
 		return err
 	}
 
+	pool, err := dbPool(cfg)
+	if err != nil {
+		return err
+	}
+
+	defer pool.Close()
+
+	service := schedule.New(logger, db.New(pool))
+	server, err := httpServer(logger, cfg, service)
+	if err != nil {
+		return fmt.Errorf("failed to create http server: %w", err)
+	}
+
+	return server.ListenAndServe()
+}
+
+func dbPool(cfg config.Config) (*pgxpool.Pool, error) {
 	pgxpoolArgs := fmt.Sprintf("host=%v dbname=%v user=%v password=%v",
 		cfg.DatabaseHost,
 		cfg.DatabaseName,
 		cfg.DatabaseUser,
 		cfg.DatabasePassword)
-	pool, err := pgxpool.New(context.Background(), pgxpoolArgs)
-	if err != nil {
-		return err
-	}
 
-	queries := db.New(pool)
-	service := schedule.New(logger, queries)
+	return pgxpool.New(context.Background(), pgxpoolArgs)
+}
 
+func httpServer(logger *slog.Logger, cfg config.Config, service schedule.Service) (*http.Server, error) {
 	apiHandler := handler.NewAPIHandler(logger, service)
 	staticHandler, err := handler.NewStaticHandler()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	mux := http.NewServeMux()
 	mux.Handle("GET /", staticHandler)
 	api.HandlerFromMux(&apiHandler, mux)
 
-	server := &http.Server{
+	return &http.Server{
 		Addr:              cfg.BindAddress,
 		Handler:           mux,
 		ReadHeaderTimeout: ReadHeaderTimeout,
-	}
-
-	return server.ListenAndServe()
+	}, nil
 }
