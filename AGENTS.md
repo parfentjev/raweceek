@@ -28,5 +28,11 @@ Rawe Ceek is a small web service that exposes upcoming racing sessions through a
 - Do not introduce interfaces or abstractions for hypothetical future needs.
 - Do not edit files under `internal/generated`; update their source specifications and regenerate them.
 - Preserve error causes and add operation-specific context when returning errors.
-- TODO: Define package boundaries when the application structure has settled.
-- TODO: Document configuration and deployment once decided.
+
+## Package Boundaries
+
+- `cmd` is the composition root: load configuration, initialize PostgreSQL, wire services and handlers, and run the HTTP server.
+- `internal/config` owns environment-variable parsing and defaults.
+- `internal/handler` owns HTTP transport concerns and the embedded static site; keep business decisions out of handlers.
+- `internal/schedule` owns racing-session behavior and maps database results to API models.
+- `spec` is the source of truth for the OpenAPI contract, database schema, SQL queries, and generator configuration. `internal/generated/api` and `internal/generated/db` contain generated adapters only.

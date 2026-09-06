@@ -1,0 +1,19 @@
+[Unit]
+Description=RaweCeek.eu service
+After=network-online.target
+
+[Container]
+Image=ghcr.io/parfentjev/raweceek:latest
+# public web service
+PublishPort=127.0.0.1:8080:8080
+# promethius metrics: not implemented yet
+#PublishPort=127.0.0.1:8081:8081
+NoNewPrivileges=true
+EnvironmentFile=%h/raweceek.env
+
+[Service]
+Restart=always
+TimeoutStartSec=60
+
+[Install]
+WantedBy=default.target

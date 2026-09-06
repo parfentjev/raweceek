@@ -8,7 +8,7 @@ type Config struct {
 }
 
 type Server struct {
-	BindAddress string `env:"BIND_ADDRESS" envDefault:"0.0.0.0:8080"`
+	BindAddressPublic string `env:"BIND_ADDRESS_PUBLIC" envDefault:"0.0.0.0:8080"`
 }
 
 type Database struct {

@@ -1,0 +1,27 @@
+name: checks
+
+on:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Go
+        uses: actions/setup-go@v7
+      - name: Install golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          install-only: true
+      - name: Check formatting
+        run: |
+          make fmt
+          git diff --exit-code
+      - name: Run linters
+        run: make lint
+      - name: Run tests
+        run: make test

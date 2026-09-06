@@ -91,7 +91,7 @@ func httpServer(logger *slog.Logger, cfg config.Server, service schedule.Service
 	api.HandlerFromMux(&apiHandler, mux)
 
 	return &http.Server{
-		Addr:              cfg.BindAddress,
+		Addr:              cfg.BindAddressPublic,
 		Handler:           mux,
 		ReadTimeout:       ServerReadTimeout,
 		ReadHeaderTimeout: ServerReadHeaderTimeout,
