@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -17,29 +18,53 @@ func NewAPIHandler(logger *slog.Logger, service schedule.Service) APIHandler {
 	return APIHandler{logger, service}
 }
 
-func (s *APIHandler) GetNextSession(_ http.ResponseWriter, _ *http.Request) {}
-
-func (s *APIHandler) GetStatus(_ http.ResponseWriter, _ *http.Request) {}
-
-func (s *APIHandler) GetStatusV2(w http.ResponseWriter, r *http.Request) {
-	status, err := s.service.GetStatusV2(r.Context())
+func (h *APIHandler) GetNextSession(w http.ResponseWriter, r *http.Request) {
+	session, err := h.service.GetNextSession(r.Context())
 	if err != nil {
-		s.logger.ErrorContext(r.Context(), "failed to get status", slog.Any("error", err))
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		h.writeError(w, r, fmt.Errorf("failed to get next session: %w", err), http.StatusInternalServerError)
 		return
 	}
 
-	body, err := json.Marshal(status)
+	h.writeJSON(w, r, session)
+}
+
+func (h *APIHandler) GetStatus(w http.ResponseWriter, r *http.Request) {
+	status, err := h.service.GetStatus(r.Context())
 	if err != nil {
-		s.logger.ErrorContext(r.Context(), "failed to encode response body", slog.Any("error", err))
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		h.writeError(w, r, fmt.Errorf("failed to get status: %w", err), http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Add("Content-Type", "application/json")
+	h.writeJSON(w, r, status)
+}
+
+func (h *APIHandler) GetStatusV2(w http.ResponseWriter, r *http.Request) {
+	status, err := h.service.GetStatusV2(r.Context())
+	if err != nil {
+		h.writeError(w, r, fmt.Errorf("failed to get status v2: %w", err), http.StatusInternalServerError)
+		return
+	}
+
+	h.writeJSON(w, r, status)
+}
+
+//nolint:unparam // Always receives 500, but this is remporary—I'll add 404 later
+func (h *APIHandler) writeError(w http.ResponseWriter, r *http.Request, err error, statusCode int) {
+	h.logger.ErrorContext(r.Context(), "failed to process API request", slog.Any("error", err))
+	http.Error(w, "internal server error", statusCode)
+}
+
+func (h *APIHandler) writeJSON(w http.ResponseWriter, r *http.Request, response any) {
+	body, err := json.Marshal(response)
+	if err != nil {
+		h.writeError(w, r, fmt.Errorf("failed to encode response body: %w", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
 	if _, err = w.Write(body); err != nil {
-		s.logger.ErrorContext(r.Context(), "failed to write response body", slog.Any("error", err))
+		h.writeError(w, r, fmt.Errorf("failed to write response body: %w", err), http.StatusInternalServerError)
 	}
 }
