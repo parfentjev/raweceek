@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log/slog"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -12,15 +11,14 @@ import (
 	"github.com/parfentjev/raweceek/internal/generated/db"
 )
 
-var ErrSessionNotFound = errors.New("next session(s) not found")
+var ErrSessionNotFound = errors.New("upcoming session(s) not found")
 
 type Service struct {
-	logger  *slog.Logger
 	queries *db.Queries
 }
 
-func New(logger *slog.Logger, queries *db.Queries) Service {
-	return Service{logger, queries}
+func New(queries *db.Queries) Service {
+	return Service{queries}
 }
 
 func (s *Service) GetNextSession(ctx context.Context) (api.SessionDto, error) {

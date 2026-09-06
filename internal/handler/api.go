@@ -85,6 +85,6 @@ func (h *APIHandler) writeJSON(w http.ResponseWriter, r *http.Request, response 
 	w.WriteHeader(http.StatusOK)
 
 	if _, err = w.Write(body); err != nil {
-		h.writeInternalServerError(w, r, fmt.Errorf("failed to write response body: %w", err))
+		h.logger.ErrorContext(r.Context(), "failed to write response body", slog.Any("error", err))
 	}
 }

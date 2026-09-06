@@ -103,7 +103,7 @@ type SessionDtoV2 struct {
 type StatusDto struct {
 	NextSession SessionDto `json:"nextSession"`
 
-	// RaceWeek Indicates whether the current week contains at least one session
+	// RaceWeek Indicates whether the current week contains at least one upcoming session
 	//
 	// Example: true
 	RaceWeek bool `json:"raceWeek"`

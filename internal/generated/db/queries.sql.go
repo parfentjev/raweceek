@@ -11,23 +11,6 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const countThisWeek = `-- name: CountThisWeek :one
-select
-	count(*)
-from
-	sessions
-where
-	start_time >= date_trunc('week', now())
-	and start_time < date_trunc('week', now()) + interval '1 week'
-`
-
-func (q *Queries) CountThisWeek(ctx context.Context) (int64, error) {
-	row := q.db.QueryRow(ctx, countThisWeek)
-	var count int64
-	err := row.Scan(&count)
-	return count, err
-}
-
 const findNext = `-- name: FindNext :one
 select
 	summary,

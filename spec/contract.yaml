@@ -119,7 +119,7 @@ components:
       properties:
         raceWeek:
           type: boolean
-          description: Indicates whether the current week contains at least one session
+          description: Indicates whether the current week contains at least one upcoming session
           example: true
         nextSession:
           $ref: "#/components/schemas/SessionDto"

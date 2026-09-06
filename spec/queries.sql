@@ -1,12 +1,3 @@
--- name: CountThisWeek :one
-select
-	count(*)
-from
-	sessions
-where
-	start_time >= date_trunc('week', now())
-	and start_time < date_trunc('week', now()) + interval '1 week';
-
 -- name: FindNext :one
 select
 	summary,

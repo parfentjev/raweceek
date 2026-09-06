@@ -3,11 +3,19 @@ package config
 import "github.com/caarlos0/env/v11"
 
 type Config struct {
-	BindAddress      string `env:"BIND_ADDRESS"      envDefault:"0.0.0.0:8080"`
-	DatabaseHost     string `env:"DATABASE_HOST"`
-	DatabaseName     string `env:"DATABASE_NAME"`
-	DatabaseUser     string `env:"DATABASE_USER"`
-	DatabasePassword string `env:"DATABASE_PASSWORD"`
+	Server   Server   `envPrefix:"SERVER_"`
+	Database Database `envPrefix:"DATABASE_"`
+}
+
+type Server struct {
+	BindAddress string `env:"BIND_ADDRESS" envDefault:"0.0.0.0:8080"`
+}
+
+type Database struct {
+	Host     string `env:"HOST"`
+	Name     string `env:"NAME"`
+	User     string `env:"USER"`
+	Password string `env:"PASSWORD"`
 }
 
 func New() (Config, error) {
