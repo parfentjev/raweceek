@@ -21,7 +21,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dprotaso/go-yit v0.0.0-20220510233725-9ba8df137936 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
-	github.com/getkin/kin-openapi v0.142.0 // indirect
+	github.com/getkin/kin-openapi v0.144.0 // indirect
 	github.com/go-openapi/jsonpointer v0.23.1 // indirect
 	github.com/go-openapi/swag/jsonname v0.26.0 // indirect
 	github.com/go-sql-driver/mysql v1.9.3 // indirect
