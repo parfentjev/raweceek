@@ -41,11 +41,10 @@ const run = () => {
       for (const session of upcoming) {
         const sessionContainer = sessionTemplate.cloneNode(true);
         sessionContainer.querySelector("h2").textContent = session.summary;
+        sessionContainer.querySelector("h3").textContent = session.start_time;
 
         for (const countdown of session.countdowns) {
           const countdownContainer = countdownTemplate.cloneNode(true);
-          const colorId = Math.floor(Math.random() * 7);
-          countdownContainer.className = `color-${colorId}`;
           countdownContainer.textContent = countdown.value;
 
           const countdownsContainer = sessionContainer.querySelector("ul");
