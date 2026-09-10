@@ -43,7 +43,7 @@ func run(logger *slog.Logger) error {
 		return err
 	}
 
-	pool, err := newDbPool(cfg.Database)
+	pool, err := newDBPool(cfg.Database)
 	if err != nil {
 		return err
 	}
@@ -51,15 +51,15 @@ func run(logger *slog.Logger) error {
 	defer pool.Close()
 
 	service := schedule.New(db.New(pool))
-	server, err := newHttpServer(logger, cfg.Server, service)
+	server, err := newHTTPServer(logger, cfg.Server, service)
 	if err != nil {
 		return fmt.Errorf("failed to create http server: %w", err)
 	}
 
-	return startHttpServer(logger, server)
+	return startHTTPServer(logger, server)
 }
 
-func newDbPool(cfg config.Database) (*pgxpool.Pool, error) {
+func newDBPool(cfg config.Database) (*pgxpool.Pool, error) {
 	pgxpoolArgs := (&url.URL{
 		Scheme: "postgres",
 		User:   url.UserPassword(cfg.User, cfg.Password),
@@ -83,7 +83,7 @@ func newDbPool(cfg config.Database) (*pgxpool.Pool, error) {
 	return pool, nil
 }
 
-func newHttpServer(logger *slog.Logger, cfg config.Server, service schedule.Service) (*http.Server, error) {
+func newHTTPServer(logger *slog.Logger, cfg config.Server, service schedule.Service) (*http.Server, error) {
 	apiHandler := handler.NewAPIHandler(logger, service)
 	staticHandler, err := handler.NewStaticHandler()
 	if err != nil {
@@ -104,7 +104,7 @@ func newHttpServer(logger *slog.Logger, cfg config.Server, service schedule.Serv
 	}, nil
 }
 
-func startHttpServer(logger *slog.Logger, server *http.Server) error {
+func startHTTPServer(logger *slog.Logger, server *http.Server) error {
 	signalContext, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
