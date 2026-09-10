@@ -22,6 +22,10 @@ h1 {
   border: 3px dashed orange;
 }
 
+#upcoming-sessions ul {
+  padding: 0;
+}
+
 #upcoming-sessions li {
   list-style: none;
   font-weight: bold;
