@@ -4,9 +4,10 @@ export
 .PHONY: init fmt lint generate tsc test run
 
 init:
+	@command -v go >/dev/null 2>&1 || { echo "error: 'go' is not installed"; exit 1; }
 	go get -tool github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
 	go get -tool github.com/sqlc-dev/sqlc/cmd/sqlc@latest
-	@which tsc >/dev/null 2>&1 || echo "warning: typescript is not installed; run npm i -g typescript"
+	@command -v tsc >/dev/null 2>&1 || echo "warning: 'typescript' is not installed"
 
 fmt:
 	golangci-lint fmt
