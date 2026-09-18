@@ -1,11 +1,10 @@
-package schedule_test
+package schedule
 
 import (
 	"testing"
 	"time"
 
 	"github.com/parfentjev/raweceek/internal/generated/api"
-	"github.com/parfentjev/raweceek/internal/schedule"
 )
 
 func TestCeeksCountdown(t *testing.T) {
@@ -47,8 +46,8 @@ func TestCeeksCountdown(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			time := schedule.NewRemainingTime(tt.remainingTime)
-			countdown := time.Ceeks()
+			time := newCountdownCalc(tt.remainingTime)
+			countdown := time.ceeks()
 
 			if countdown.Type != api.CEEKS {
 				t.Errorf("NewCeeks() type = %q, want %q", countdown.Type, api.CEEKS)
@@ -112,8 +111,8 @@ func TestTimeUntilCountdown(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			time := schedule.NewRemainingTime(tt.remainingTime)
-			countdown := time.TimeUntil()
+			time := newCountdownCalc(tt.remainingTime)
+			countdown := time.timeUntil()
 
 			if countdown.Type != api.TIMEUNTIL {
 				t.Errorf("NewTimeUntil() type = %q, want %q", countdown.Type, api.TIMEUNTIL)

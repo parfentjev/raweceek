@@ -18,16 +18,16 @@ type timeUntilUnit struct {
 	value int64
 }
 
-type RemainingTime struct {
-	value time.Duration
+type countdownCalc struct {
+	remainingTime time.Duration
 }
 
-func NewRemainingTime(value time.Duration) RemainingTime {
-	return RemainingTime{value}
+func newCountdownCalc(remainingTime time.Duration) countdownCalc {
+	return countdownCalc{remainingTime}
 }
 
-func (rt *RemainingTime) Ceeks() api.CountdownDto {
-	ceeks := rt.value.Seconds() / secondsPerWeek
+func (rt *countdownCalc) ceeks() api.CountdownDto {
+	ceeks := rt.remainingTime.Seconds() / secondsPerWeek
 	if ceeks < minCeeksValue {
 		ceeks = minCeeksValue
 	}
@@ -38,8 +38,8 @@ func (rt *RemainingTime) Ceeks() api.CountdownDto {
 	}
 }
 
-func (rt *RemainingTime) TimeUntil() api.CountdownDto {
-	timeUnits := extractTimeUntilUnits(rt.value)
+func (rt *countdownCalc) timeUntil() api.CountdownDto {
+	timeUnits := extractTimeUntilUnits(rt.remainingTime)
 
 	var result strings.Builder
 	for i, unit := range timeUnits {

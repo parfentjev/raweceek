@@ -31,12 +31,12 @@ func (s *Service) GetNextSession(ctx context.Context) (api.SessionDto, error) {
 		return api.SessionDto{}, err
 	}
 
-	remainingTime := startToRemainingTime(session.StartTime.Time)
+	countdown := newCountdownCalc(time.Until(session.StartTime.Time))
 
 	return api.SessionDto{
 		Countdowns: []api.CountdownDto{
-			remainingTime.Ceeks(),
-			remainingTime.TimeUntil(),
+			countdown.ceeks(),
+			countdown.timeUntil(),
 		},
 		Location:  session.Location,
 		StartTime: session.StartTime.Time.UTC(),
@@ -54,14 +54,14 @@ func (s *Service) GetStatus(ctx context.Context) (api.StatusDto, error) {
 		return api.StatusDto{}, err
 	}
 
-	remainingTime := startToRemainingTime(session.StartTime.Time)
+	countdown := newCountdownCalc(time.Until(session.StartTime.Time))
 
 	return api.StatusDto{
 		RaceWeek: session.ThisWeek.Bool,
 		NextSession: api.SessionDto{
 			Countdowns: []api.CountdownDto{
-				remainingTime.Ceeks(),
-				remainingTime.TimeUntil(),
+				countdown.ceeks(),
+				countdown.timeUntil(),
 			},
 			Location:  session.Location,
 			StartTime: session.StartTime.Time.UTC(),
@@ -89,12 +89,12 @@ func (s *Service) GetStatusV2(ctx context.Context) (api.StatusDtoV2, error) {
 func mapRowsToSessions(rows []db.FindUpcomingRow) []api.SessionDtoV2 {
 	sessions := make([]api.SessionDtoV2, 0, len(rows))
 	for _, row := range rows {
-		remainingTime := startToRemainingTime(row.StartTime.Time)
+		countdown := newCountdownCalc(time.Until(row.StartTime.Time))
 
 		sessions = append(sessions, api.SessionDtoV2{
 			Countdowns: []api.CountdownDto{
-				remainingTime.Ceeks(),
-				remainingTime.TimeUntil(),
+				countdown.ceeks(),
+				countdown.timeUntil(),
 			},
 			Location:  row.Location,
 			StartTime: row.StartTime.Time.UTC(),
@@ -104,8 +104,4 @@ func mapRowsToSessions(rows []db.FindUpcomingRow) []api.SessionDtoV2 {
 	}
 
 	return sessions
-}
-
-func startToRemainingTime(startTime time.Time) RemainingTime {
-	return NewRemainingTime(time.Until(startTime))
 }
