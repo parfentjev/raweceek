@@ -8,8 +8,8 @@ const SECONDS_PER_WEEK: f64 = 604_800.0;
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
-    #[error("time_until: failed to write to String: {0}")]
-    WriteError(#[from] fmt::Error),
+    #[error("format error: {0}")]
+    FormatError(#[from] fmt::Error),
 }
 
 #[derive(Serialize)]
@@ -26,7 +26,7 @@ pub struct CountdownDto {
     pub value: String,
 }
 
-struct TimeUntilUnit {
+struct TimeUnit {
     name: &'static str,
     value: i64,
 }
@@ -42,29 +42,28 @@ impl CountdownDto {
     }
 
     pub fn time_until(remaining_time: &Duration) -> Result<Self, Error> {
-        let time_units = extract_time_units(remaining_time);
-        let mut non_zero_values = time_units.iter().filter(|v| v.value > 0).peekable();
+        let time_units = calc_time_units(remaining_time);
 
-        let mut result = String::new();
-        while let Some(time_unit) = non_zero_values.next() {
-            let TimeUntilUnit { name, value } = time_unit;
-
-            add_separator(&mut result, non_zero_values.peek().is_none())?;
-            append_unit(&mut result, value, name)?;
+        let mut filtered_units = time_units.iter().filter(|u| u.value > 0).peekable();
+        let mut value = String::new();
+        while let Some(unit) = filtered_units.next() {
+            let is_last = filtered_units.peek().is_none();
+            append_separator(&mut value, is_last)?;
+            append_unit(&mut value, unit)?;
         }
 
-        if result.is_empty() {
-            write!(&mut result, "0s")?;
+        if value.is_empty() {
+            write!(&mut value, "0s")?;
         }
 
         Ok(Self {
             kind: CountdownType::TimeUntil,
-            value: result,
+            value,
         })
     }
 }
 
-fn extract_time_units(remaining_time: &Duration) -> [TimeUntilUnit; 6] {
+fn calc_time_units(remaining_time: &Duration) -> [TimeUnit; 6] {
     let remaining_time = remaining_time.whole_seconds();
 
     let seconds = (remaining_time) % 60;
@@ -81,34 +80,34 @@ fn extract_time_units(remaining_time: &Duration) -> [TimeUntilUnit; 6] {
     let days = remaining_days % 7;
 
     [
-        TimeUntilUnit {
+        TimeUnit {
             name: "month",
             value: months,
         },
-        TimeUntilUnit {
+        TimeUnit {
             name: "week",
             value: weeks,
         },
-        TimeUntilUnit {
+        TimeUnit {
             name: "day",
             value: days,
         },
-        TimeUntilUnit {
+        TimeUnit {
             name: "hour",
             value: hours,
         },
-        TimeUntilUnit {
+        TimeUnit {
             name: "minute",
             value: minutes,
         },
-        TimeUntilUnit {
+        TimeUnit {
             name: "second",
             value: seconds,
         },
     ]
 }
 
-fn add_separator(result: &mut String, is_last: bool) -> Result<(), Error> {
+fn append_separator(result: &mut String, is_last: bool) -> Result<(), Error> {
     if result.is_empty() {
         return Ok(());
     }
@@ -122,8 +121,9 @@ fn add_separator(result: &mut String, is_last: bool) -> Result<(), Error> {
     Ok(())
 }
 
-fn append_unit(out: &mut String, value: &i64, unit: &str) -> Result<(), Error> {
-    write!(out, "{value} {unit}")?;
+fn append_unit(out: &mut String, unit: &TimeUnit) -> Result<(), Error> {
+    let TimeUnit { value, name } = unit;
+    write!(out, "{value} {name}")?;
 
     // Append 's' to values greater than 1, e.g.:
     // - 1 second
